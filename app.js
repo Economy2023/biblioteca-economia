@@ -1,4 +1,4 @@
-const SHEET_ID = "TU_ID_REAL";
+const SHEET_ID = "12NOm3qbdM7X0eA6NPCafV35p6rhENyCcanIs47ndLuw";
 const SHEET_NAME = "Secciones";
 
 let secciones = [];
