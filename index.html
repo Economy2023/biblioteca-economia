@@ -1,18 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Biblioteca de Economía</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="app.js" defer></script>
 </head>
 
 <body>
 
-    <h1>Biblioteca de Economía</h1>
+<header class="hero">
 
-    <p>
-        Repositorio académico para estudiantes de Economía.
-    </p>
+    <div class="container">
+
+        <h1>Biblioteca de Economía</h1>
+
+        <p>
+            Repositorio académico para estudiantes
+            de la carrera de Economía
+        </p>
+
+        <input
+            type="search"
+            id="buscador"
+            placeholder="Buscar curso..."
+        >
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <section>
+
+        <h2>Biblioteca</h2>
+
+        <div id="secciones" class="grid">
+            <p>Cargando biblioteca...</p>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Biblioteca de Economía
+</footer>
 
 </body>
+
 </html>
