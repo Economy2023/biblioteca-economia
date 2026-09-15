@@ -1,7 +1,23 @@
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
 const SHEET_ID = "12NOm3qbdM7X0eA6NPCafV35p6rhENyCcanIs47ndLuw";
+
 const SHEET_NAME = "Secciones";
 
+
+/* =====================================================
+   ESTADO GLOBAL
+===================================================== */
+
 let secciones = [];
+
+
+
+/* =====================================================
+   ELEMENTOS DEL DOM
+===================================================== */
 
 const buscador =
     document.getElementById("buscador");
@@ -21,6 +37,23 @@ const contador =
 const contenedor =
     document.getElementById("secciones");
 
+const anioActual =
+    document.getElementById("anioActual");
+
+
+
+/* =====================================================
+   PIE DE PÁGINA
+===================================================== */
+
+anioActual.textContent =
+    `© ${new Date().getFullYear()}`;
+
+
+
+/* =====================================================
+   GOOGLE CHARTS
+===================================================== */
 
 google.charts.load("current");
 
@@ -29,48 +62,64 @@ google.charts.setOnLoadCallback(
 );
 
 
-/* =========================
-   CARGAR GOOGLE SHEETS
-========================= */
+
+/* =====================================================
+   CARGAR DATOS DESDE GOOGLE SHEETS
+===================================================== */
 
 function cargarSecciones() {
 
+    mostrarCarga();
+
+
     const url =
         `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`
-        + `?sheet=${encodeURIComponent(SHEET_NAME)}`
-        + `&headers=1`;
+        +
+        `?sheet=${encodeURIComponent(SHEET_NAME)}`
+        +
+        `&headers=1`;
+
 
     const query =
         new google.visualization.Query(url);
 
-    query.send(procesarRespuesta);
+
+    query.send(
+        procesarRespuesta
+    );
+
 }
 
 
-/* =========================
-   PROCESAR DATOS
-========================= */
+
+/* =====================================================
+   PROCESAR RESPUESTA
+===================================================== */
 
 function procesarRespuesta(response) {
+
 
     if (response.isError()) {
 
         console.error(
-            "Error:",
+            "Error de Google Sheets:",
             response.getMessage()
         );
 
-        contenedor.innerHTML = `
-            <p class="mensaje">
-                No fue posible cargar la biblioteca.
-            </p>
-        `;
+
+        mostrarError(
+            "No fue posible cargar la biblioteca. Verifica la configuración del Google Sheet."
+        );
+
 
         contador.textContent =
-            "Error al cargar";
+            "No se pudieron cargar los recursos";
+
 
         return;
+
     }
+
 
 
     const data =
@@ -80,53 +129,90 @@ function procesarRespuesta(response) {
     secciones = [];
 
 
+
     for (
         let fila = 0;
         fila < data.getNumberOfRows();
         fila++
     ) {
 
+
         const seccion = {
 
             id:
-                data.getValue(fila, 0),
+                obtenerValor(
+                    data,
+                    fila,
+                    0
+                ),
 
             nombre:
-                data.getValue(fila, 1),
+                obtenerValor(
+                    data,
+                    fila,
+                    1
+                ),
 
             ciclo:
-                data.getValue(fila, 2),
+                obtenerValor(
+                    data,
+                    fila,
+                    2
+                ),
 
             descripcion:
-                data.getValue(fila, 3),
+                obtenerValor(
+                    data,
+                    fila,
+                    3
+                ),
 
             tipoAcceso:
-                data.getValue(fila, 4),
+                obtenerValor(
+                    data,
+                    fila,
+                    4
+                ),
 
             driveUrl:
-                data.getValue(fila, 5),
+                obtenerValor(
+                    data,
+                    fila,
+                    5
+                ),
 
             activo:
-                data.getValue(fila, 6),
+                obtenerValor(
+                    data,
+                    fila,
+                    6
+                ),
 
             orden:
-                data.getValue(fila, 7)
+                obtenerValor(
+                    data,
+                    fila,
+                    7
+                )
 
         };
 
 
+
         if (
-            String(seccion.activo || "")
-                .trim()
-                .toUpperCase()
-            === "SI"
+            normalizarTexto(
+                seccion.activo
+            ) === "si"
         ) {
 
-            secciones.push(seccion);
+            secciones.push(
+                seccion
+            );
 
         }
 
     }
+
 
 
     ordenarSecciones();
@@ -138,50 +224,118 @@ function procesarRespuesta(response) {
 }
 
 
-/* =========================
-   ORDEN
-========================= */
 
-function ordenarSecciones() {
+/* =====================================================
+   OBTENER VALOR DE CELDA
+===================================================== */
 
-    secciones.sort((a, b) => {
+function obtenerValor(
+    data,
+    fila,
+    columna
+) {
 
-        const cicloA =
-            Number(a.ciclo || 0);
-
-        const cicloB =
-            Number(b.ciclo || 0);
-
-
-        if (cicloA !== cicloB) {
-            return cicloA - cicloB;
-        }
-
-
-        return (
-            Number(a.orden || 0)
-            -
-            Number(b.orden || 0)
+    const valor =
+        data.getValue(
+            fila,
+            columna
         );
 
-    });
+
+    if (
+        valor === null
+        ||
+        valor === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return valor;
 
 }
 
 
-/* =========================
-   GENERAR CICLOS
-========================= */
+
+/* =====================================================
+   ORDENAR
+===================================================== */
+
+function ordenarSecciones() {
+
+    secciones.sort(
+        (a, b) => {
+
+
+            const cicloA =
+                Number(a.ciclo) || 0;
+
+            const cicloB =
+                Number(b.ciclo) || 0;
+
+
+
+            if (
+                cicloA !== cicloB
+            ) {
+
+                return (
+                    cicloA - cicloB
+                );
+
+            }
+
+
+
+            const ordenA =
+                Number(a.orden) || 0;
+
+            const ordenB =
+                Number(b.orden) || 0;
+
+
+            return (
+                ordenA - ordenB
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   CREAR FILTRO DE CICLOS
+===================================================== */
 
 function generarFiltroCiclos() {
 
-    const ciclos = [
-        ...new Set(
-            secciones
-                .map(s => s.ciclo)
-                .filter(Boolean)
-        )
-    ];
+
+    filtroCiclo.innerHTML = `
+        <option value="">
+            Todos los ciclos
+        </option>
+    `;
+
+
+
+    const ciclos =
+        [
+            ...new Set(
+                secciones
+                    .map(
+                        seccion =>
+                            String(
+                                seccion.ciclo
+                            ).trim()
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
 
 
     ciclos.sort(
@@ -190,243 +344,436 @@ function generarFiltroCiclos() {
     );
 
 
-    ciclos.forEach(ciclo => {
 
-        const opcion =
-            document.createElement("option");
+    ciclos.forEach(
+        ciclo => {
 
-        opcion.value =
-            String(ciclo);
 
-        opcion.textContent =
-            `Ciclo ${ciclo}`;
+            const opcion =
+                document.createElement(
+                    "option"
+                );
 
-        filtroCiclo.appendChild(opcion);
 
-    });
+            opcion.value =
+                ciclo;
+
+
+            opcion.textContent =
+                `Ciclo ${convertirCicloRomano(ciclo)}`;
+
+
+            filtroCiclo.appendChild(
+                opcion
+            );
+
+        }
+    );
 
 }
 
 
-/* =========================
-   FILTROS
-========================= */
+
+/* =====================================================
+   FILTRAR
+===================================================== */
 
 function aplicarFiltros() {
 
+
     const texto =
-        buscador.value
-            .toLowerCase()
-            .trim();
-
-    const cicloSeleccionado =
-        filtroCiclo.value;
-
-    const accesoSeleccionado =
-        filtroAcceso.value;
-
-
-    const resultados =
-        secciones.filter(seccion => {
-
-
-            const nombre =
-                String(
-                    seccion.nombre || ""
-                ).toLowerCase();
-
-
-            const descripcion =
-                String(
-                    seccion.descripcion || ""
-                ).toLowerCase();
-
-
-            const ciclo =
-                String(
-                    seccion.ciclo || ""
-                );
-
-
-            const acceso =
-                normalizarTexto(
-                    seccion.tipoAcceso
-                );
-
-
-            const coincideTexto =
-                nombre.includes(texto)
-                ||
-                descripcion.includes(texto);
-
-
-            const coincideCiclo =
-                !cicloSeleccionado
-                ||
-                ciclo === cicloSeleccionado;
-
-
-            const coincideAcceso =
-                !accesoSeleccionado
-                ||
-                acceso === accesoSeleccionado;
-
-
-            return (
-                coincideTexto
-                &&
-                coincideCiclo
-                &&
-                coincideAcceso
-            );
-
-        });
-
-
-    mostrarSecciones(resultados);
-
-}
-
-
-/* =========================
-   MOSTRAR RESULTADOS
-========================= */
-
-function mostrarSecciones(lista) {
-
-    contenedor.innerHTML = "";
-
-
-    contador.textContent =
-        `${lista.length} ${
-            lista.length === 1
-                ? "recurso encontrado"
-                : "recursos encontrados"
-        }`;
-
-
-    if (lista.length === 0) {
-
-        contenedor.innerHTML = `
-            <p class="mensaje">
-                No encontramos recursos con esos filtros.
-            </p>
-        `;
-
-        return;
-    }
-
-
-    lista.forEach(seccion => {
-
-        const card =
-            document.createElement("article");
-
-        card.className = "card";
-
-
-        const titulo =
-            document.createElement("h3");
-
-        titulo.textContent =
-            seccion.nombre;
-
-
-        const ciclo =
-            document.createElement("p");
-
-        ciclo.className = "ciclo";
-
-        ciclo.textContent =
-            `Ciclo ${seccion.ciclo}`;
-
-
-        const descripcion =
-            document.createElement("p");
-
-        descripcion.className =
-            "descripcion";
-
-        descripcion.textContent =
-            seccion.descripcion || "";
-
-
-        const acceso =
-            document.createElement("span");
-
-
-        const tipo =
-            normalizarTexto(
-                seccion.tipoAcceso
-            );
-
-
-        if (tipo === "restringido") {
-
-            acceso.className =
-                "acceso restringido";
-
-            acceso.textContent =
-                "🔒 Acceso restringido";
-
-        } else {
-
-            acceso.className =
-                "acceso publico";
-
-            acceso.textContent =
-                "Acceso público";
-
-        }
-
-
-        const boton =
-            document.createElement("a");
-
-        boton.className = "boton";
-
-        boton.href =
-            seccion.driveUrl;
-
-        boton.target =
-            "_blank";
-
-        boton.rel =
-            "noopener noreferrer";
-
-
-        boton.textContent =
-            tipo === "restringido"
-                ? "Solicitar / abrir acceso"
-                : "Abrir biblioteca";
-
-
-        card.append(
-            titulo,
-            ciclo,
-            descripcion,
-            acceso,
-            boton
+        normalizarTexto(
+            buscador.value
         );
 
 
-        contenedor.appendChild(card);
+    const cicloSeleccionado =
+        String(
+            filtroCiclo.value
+        );
 
-    });
+
+    const accesoSeleccionado =
+        normalizarTexto(
+            filtroAcceso.value
+        );
+
+
+
+    const resultados =
+        secciones.filter(
+            seccion => {
+
+
+                const nombre =
+                    normalizarTexto(
+                        seccion.nombre
+                    );
+
+
+                const descripcion =
+                    normalizarTexto(
+                        seccion.descripcion
+                    );
+
+
+                const ciclo =
+                    String(
+                        seccion.ciclo
+                    ).trim();
+
+
+                const tipoAcceso =
+                    normalizarTexto(
+                        seccion.tipoAcceso
+                    );
+
+
+
+                const coincideTexto =
+                    !texto
+                    ||
+                    nombre.includes(texto)
+                    ||
+                    descripcion.includes(texto)
+                    ||
+                    ciclo.includes(texto);
+
+
+
+                const coincideCiclo =
+                    !cicloSeleccionado
+                    ||
+                    ciclo === cicloSeleccionado;
+
+
+
+                const coincideAcceso =
+                    !accesoSeleccionado
+                    ||
+                    tipoAcceso ===
+                    accesoSeleccionado;
+
+
+
+                return (
+
+                    coincideTexto
+                    &&
+                    coincideCiclo
+                    &&
+                    coincideAcceso
+
+                );
+
+            }
+        );
+
+
+
+    mostrarSecciones(
+        resultados
+    );
 
 }
 
 
-/* =========================
+
+/* =====================================================
+   MOSTRAR TARJETAS
+===================================================== */
+
+function mostrarSecciones(lista) {
+
+
+    contenedor.innerHTML =
+        "";
+
+
+
+    actualizarContador(
+        lista.length
+    );
+
+
+
+    if (
+        lista.length === 0
+    ) {
+
+
+        contenedor.innerHTML = `
+            <div class="empty-state">
+
+                <strong>
+                    No se encontraron recursos
+                </strong>
+
+                <p>
+                    Intenta modificar la búsqueda
+                    o los filtros seleccionados.
+                </p>
+
+            </div>
+        `;
+
+
+        return;
+
+    }
+
+
+
+    lista.forEach(
+        seccion => {
+
+
+            const card =
+                crearTarjeta(
+                    seccion
+                );
+
+
+            contenedor.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   CREAR TARJETA
+===================================================== */
+
+function crearTarjeta(seccion) {
+
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "card";
+
+
+
+    /* -------------------------
+       NOMBRE
+    ------------------------- */
+
+    const titulo =
+        document.createElement(
+            "h3"
+        );
+
+
+    titulo.textContent =
+        seccion.nombre;
+
+
+
+    /* -------------------------
+       CICLO
+    ------------------------- */
+
+    const ciclo =
+        document.createElement(
+            "p"
+        );
+
+
+    ciclo.className =
+        "ciclo";
+
+
+    ciclo.textContent =
+        `Ciclo ${convertirCicloRomano(
+            seccion.ciclo
+        )}`;
+
+
+
+    /* -------------------------
+       DESCRIPCIÓN
+    ------------------------- */
+
+    const descripcion =
+        document.createElement(
+            "p"
+        );
+
+
+    descripcion.className =
+        "descripcion";
+
+
+    descripcion.textContent =
+        seccion.descripcion
+        ||
+        "Material académico disponible para este curso.";
+
+
+
+    /* -------------------------
+       ACCESO
+    ------------------------- */
+
+    const acceso =
+        document.createElement(
+            "span"
+        );
+
+
+    const tipo =
+        normalizarTexto(
+            seccion.tipoAcceso
+        );
+
+
+
+    if (
+        tipo === "restringido"
+    ) {
+
+
+        acceso.className =
+            "acceso restringido";
+
+
+        acceso.textContent =
+            "🔒 Acceso restringido";
+
+
+    }
+
+    else {
+
+
+        acceso.className =
+            "acceso publico";
+
+
+        acceso.textContent =
+            "● Acceso público";
+
+    }
+
+
+
+    /* -------------------------
+       BOTÓN
+    ------------------------- */
+
+    const boton =
+        document.createElement(
+            "a"
+        );
+
+
+    boton.className =
+        "boton";
+
+
+    boton.href =
+        validarUrl(
+            seccion.driveUrl
+        );
+
+
+    boton.target =
+        "_blank";
+
+
+    boton.rel =
+        "noopener noreferrer";
+
+
+
+    boton.textContent =
+        tipo === "restringido"
+        ?
+        "Abrir recurso restringido ↗"
+        :
+        "Abrir biblioteca ↗";
+
+
+
+    /* -------------------------
+       ENSAMBLAR
+    ------------------------- */
+
+    card.append(
+        titulo,
+        ciclo,
+        descripcion,
+        acceso,
+        boton
+    );
+
+
+    return card;
+
+}
+
+
+
+/* =====================================================
+   CONTADOR
+===================================================== */
+
+function actualizarContador(
+    cantidad
+) {
+
+
+    if (
+        cantidad === 1
+    ) {
+
+
+        contador.textContent =
+            "1 recurso encontrado";
+
+
+    }
+
+    else {
+
+
+        contador.textContent =
+            `${cantidad} recursos encontrados`;
+
+    }
+
+}
+
+
+
+/* =====================================================
    NORMALIZAR TEXTO
-========================= */
+===================================================== */
 
-function normalizarTexto(valor) {
+function normalizarTexto(
+    valor
+) {
 
-    return String(valor || "")
+
+    return String(
+        valor || ""
+    )
+
         .trim()
+
         .toLowerCase()
+
         .normalize("NFD")
+
         .replace(
             /[\u0300-\u036f]/g,
             ""
@@ -435,9 +782,149 @@ function normalizarTexto(valor) {
 }
 
 
-/* =========================
+
+/* =====================================================
+   CONVERTIR CICLO A ROMANO
+===================================================== */
+
+function convertirCicloRomano(
+    ciclo
+) {
+
+
+    const numerosRomanos = {
+
+        1: "I",
+        2: "II",
+        3: "III",
+        4: "IV",
+        5: "V",
+        6: "VI",
+        7: "VII",
+        8: "VIII",
+        9: "IX",
+        10: "X"
+
+    };
+
+
+    const numero =
+        Number(ciclo);
+
+
+    return (
+        numerosRomanos[numero]
+        ||
+        ciclo
+    );
+
+}
+
+
+
+/* =====================================================
+   VALIDAR URL
+===================================================== */
+
+function validarUrl(
+    url
+) {
+
+
+    const valor =
+        String(
+            url || ""
+        ).trim();
+
+
+    try {
+
+
+        const destino =
+            new URL(valor);
+
+
+        if (
+            destino.protocol === "https:"
+        ) {
+
+
+            return destino.href;
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "URL inválida:",
+            valor
+        );
+
+    }
+
+
+    return "#";
+
+}
+
+
+
+/* =====================================================
+   ESTADO DE CARGA
+===================================================== */
+
+function mostrarCarga() {
+
+
+    contenedor.innerHTML = `
+        <div class="loading-state">
+
+            <div class="spinner"></div>
+
+            <p>
+                Cargando biblioteca...
+            </p>
+
+        </div>
+    `;
+
+}
+
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function mostrarError(
+    mensaje
+) {
+
+
+    contenedor.innerHTML = `
+        <div class="error-state">
+
+            <strong>
+                Error al cargar la biblioteca
+            </strong>
+
+            <p>
+                ${mensaje}
+            </p>
+
+        </div>
+    `;
+
+}
+
+
+
+/* =====================================================
    EVENTOS
-========================= */
+===================================================== */
 
 buscador.addEventListener(
     "input",
@@ -457,17 +944,28 @@ filtroAcceso.addEventListener(
 );
 
 
+
 limpiarFiltros.addEventListener(
     "click",
     () => {
 
-        buscador.value = "";
 
-        filtroCiclo.value = "";
+        buscador.value =
+            "";
 
-        filtroAcceso.value = "";
+
+        filtroCiclo.value =
+            "";
+
+
+        filtroAcceso.value =
+            "";
+
 
         aplicarFiltros();
+
+
+        buscador.focus();
 
     }
 );
