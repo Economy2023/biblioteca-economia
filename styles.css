@@ -1,0 +1,94 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+.container {
+    width: min(1100px, 90%);
+    margin: auto;
+}
+
+.hero {
+    background: #16213e;
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    margin: 0 0 10px;
+    font-size: 2.5rem;
+}
+
+.hero input {
+    width: min(500px, 100%);
+    padding: 14px 16px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+main {
+    padding: 40px 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.card .ciclo {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.acceso {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #eeeeee;
+    font-size: 0.8rem;
+}
+
+.boton {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 16px;
+
+    background: #16213e;
+    color: white;
+
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.boton:hover {
+    opacity: 0.9;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
