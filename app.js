@@ -8,15 +8,14 @@ const SHEET_NAME = "Secciones";
 
 
 /* =====================================================
-   ESTADO GLOBAL
+   DATOS
 ===================================================== */
 
 let secciones = [];
 
 
-
 /* =====================================================
-   ELEMENTOS DEL DOM
+   DOM
 ===================================================== */
 
 const buscador =
@@ -31,28 +30,54 @@ const filtroAcceso =
 const limpiarFiltros =
     document.getElementById("limpiarFiltros");
 
+const mostrarTodos =
+    document.getElementById("mostrarTodos");
+
 const contador =
     document.getElementById("contador");
 
 const contenedor =
     document.getElementById("secciones");
 
-const anioActual =
-    document.getElementById("anioActual");
+const listaCiclos =
+    document.getElementById("listaCiclos");
 
+const menuButton =
+    document.getElementById("menuButton");
+
+const mainNav =
+    document.getElementById("mainNav");
 
 
 /* =====================================================
-   PIE DE PÁGINA
+   ESTADÍSTICAS
 ===================================================== */
 
-anioActual.textContent =
+const statRecursos =
+    document.getElementById("statRecursos");
+
+const statCiclos =
+    document.getElementById("statCiclos");
+
+const statPublicos =
+    document.getElementById("statPublicos");
+
+const statRestringidos =
+    document.getElementById("statRestringidos");
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+document.getElementById(
+    "anioActual"
+).textContent =
     `© ${new Date().getFullYear()}`;
 
 
-
 /* =====================================================
-   GOOGLE CHARTS
+   GOOGLE SHEETS
 ===================================================== */
 
 google.charts.load("current");
@@ -62,15 +87,9 @@ google.charts.setOnLoadCallback(
 );
 
 
-
-/* =====================================================
-   CARGAR DATOS DESDE GOOGLE SHEETS
-===================================================== */
-
 function cargarSecciones() {
 
     mostrarCarga();
-
 
     const url =
         `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`
@@ -79,10 +98,8 @@ function cargarSecciones() {
         +
         `&headers=1`;
 
-
     const query =
         new google.visualization.Query(url);
-
 
     query.send(
         procesarRespuesta
@@ -91,43 +108,30 @@ function cargarSecciones() {
 }
 
 
-
 /* =====================================================
-   PROCESAR RESPUESTA
+   PROCESAR DATOS
 ===================================================== */
 
 function procesarRespuesta(response) {
 
-
     if (response.isError()) {
 
         console.error(
-            "Error de Google Sheets:",
             response.getMessage()
         );
 
-
         mostrarError(
-            "No fue posible cargar la biblioteca. Verifica la configuración del Google Sheet."
+            "No fue posible cargar el catálogo."
         );
-
-
-        contador.textContent =
-            "No se pudieron cargar los recursos";
-
 
         return;
 
     }
 
-
-
     const data =
         response.getDataTable();
 
-
     secciones = [];
-
 
 
     for (
@@ -135,7 +139,6 @@ function procesarRespuesta(response) {
         fila < data.getNumberOfRows();
         fila++
     ) {
-
 
         const seccion = {
 
@@ -198,7 +201,6 @@ function procesarRespuesta(response) {
         };
 
 
-
         if (
             normalizarTexto(
                 seccion.activo
@@ -214,19 +216,21 @@ function procesarRespuesta(response) {
     }
 
 
-
     ordenarSecciones();
 
     generarFiltroCiclos();
+
+    generarTarjetasCiclos();
+
+    actualizarEstadisticas();
 
     aplicarFiltros();
 
 }
 
 
-
 /* =====================================================
-   OBTENER VALOR DE CELDA
+   UTILIDADES
 ===================================================== */
 
 function obtenerValor(
@@ -241,528 +245,12 @@ function obtenerValor(
             columna
         );
 
-
-    if (
-        valor === null
-        ||
-        valor === undefined
-    ) {
-
-        return "";
-
-    }
-
-
-    return valor;
+    return valor ?? "";
 
 }
 
 
-
-/* =====================================================
-   ORDENAR
-===================================================== */
-
-function ordenarSecciones() {
-
-    secciones.sort(
-        (a, b) => {
-
-
-            const cicloA =
-                Number(a.ciclo) || 0;
-
-            const cicloB =
-                Number(b.ciclo) || 0;
-
-
-
-            if (
-                cicloA !== cicloB
-            ) {
-
-                return (
-                    cicloA - cicloB
-                );
-
-            }
-
-
-
-            const ordenA =
-                Number(a.orden) || 0;
-
-            const ordenB =
-                Number(b.orden) || 0;
-
-
-            return (
-                ordenA - ordenB
-            );
-
-        }
-    );
-
-}
-
-
-
-/* =====================================================
-   CREAR FILTRO DE CICLOS
-===================================================== */
-
-function generarFiltroCiclos() {
-
-
-    filtroCiclo.innerHTML = `
-        <option value="">
-            Todos los ciclos
-        </option>
-    `;
-
-
-
-    const ciclos =
-        [
-            ...new Set(
-                secciones
-                    .map(
-                        seccion =>
-                            String(
-                                seccion.ciclo
-                            ).trim()
-                    )
-                    .filter(Boolean)
-            )
-        ];
-
-
-
-    ciclos.sort(
-        (a, b) =>
-            Number(a) - Number(b)
-    );
-
-
-
-    ciclos.forEach(
-        ciclo => {
-
-
-            const opcion =
-                document.createElement(
-                    "option"
-                );
-
-
-            opcion.value =
-                ciclo;
-
-
-            opcion.textContent =
-                `Ciclo ${convertirCicloRomano(ciclo)}`;
-
-
-            filtroCiclo.appendChild(
-                opcion
-            );
-
-        }
-    );
-
-}
-
-
-
-/* =====================================================
-   FILTRAR
-===================================================== */
-
-function aplicarFiltros() {
-
-
-    const texto =
-        normalizarTexto(
-            buscador.value
-        );
-
-
-    const cicloSeleccionado =
-        String(
-            filtroCiclo.value
-        );
-
-
-    const accesoSeleccionado =
-        normalizarTexto(
-            filtroAcceso.value
-        );
-
-
-
-    const resultados =
-        secciones.filter(
-            seccion => {
-
-
-                const nombre =
-                    normalizarTexto(
-                        seccion.nombre
-                    );
-
-
-                const descripcion =
-                    normalizarTexto(
-                        seccion.descripcion
-                    );
-
-
-                const ciclo =
-                    String(
-                        seccion.ciclo
-                    ).trim();
-
-
-                const tipoAcceso =
-                    normalizarTexto(
-                        seccion.tipoAcceso
-                    );
-
-
-
-                const coincideTexto =
-                    !texto
-                    ||
-                    nombre.includes(texto)
-                    ||
-                    descripcion.includes(texto)
-                    ||
-                    ciclo.includes(texto);
-
-
-
-                const coincideCiclo =
-                    !cicloSeleccionado
-                    ||
-                    ciclo === cicloSeleccionado;
-
-
-
-                const coincideAcceso =
-                    !accesoSeleccionado
-                    ||
-                    tipoAcceso ===
-                    accesoSeleccionado;
-
-
-
-                return (
-
-                    coincideTexto
-                    &&
-                    coincideCiclo
-                    &&
-                    coincideAcceso
-
-                );
-
-            }
-        );
-
-
-
-    mostrarSecciones(
-        resultados
-    );
-
-}
-
-
-
-/* =====================================================
-   MOSTRAR TARJETAS
-===================================================== */
-
-function mostrarSecciones(lista) {
-
-
-    contenedor.innerHTML =
-        "";
-
-
-
-    actualizarContador(
-        lista.length
-    );
-
-
-
-    if (
-        lista.length === 0
-    ) {
-
-
-        contenedor.innerHTML = `
-            <div class="empty-state">
-
-                <strong>
-                    No se encontraron recursos
-                </strong>
-
-                <p>
-                    Intenta modificar la búsqueda
-                    o los filtros seleccionados.
-                </p>
-
-            </div>
-        `;
-
-
-        return;
-
-    }
-
-
-
-    lista.forEach(
-        seccion => {
-
-
-            const card =
-                crearTarjeta(
-                    seccion
-                );
-
-
-            contenedor.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-
-/* =====================================================
-   CREAR TARJETA
-===================================================== */
-
-function crearTarjeta(seccion) {
-
-
-    const card =
-        document.createElement(
-            "article"
-        );
-
-
-    card.className =
-        "card";
-
-
-
-    /* -------------------------
-       NOMBRE
-    ------------------------- */
-
-    const titulo =
-        document.createElement(
-            "h3"
-        );
-
-
-    titulo.textContent =
-        seccion.nombre;
-
-
-
-    /* -------------------------
-       CICLO
-    ------------------------- */
-
-    const ciclo =
-        document.createElement(
-            "p"
-        );
-
-
-    ciclo.className =
-        "ciclo";
-
-
-    ciclo.textContent =
-        `Ciclo ${convertirCicloRomano(
-            seccion.ciclo
-        )}`;
-
-
-
-    /* -------------------------
-       DESCRIPCIÓN
-    ------------------------- */
-
-    const descripcion =
-        document.createElement(
-            "p"
-        );
-
-
-    descripcion.className =
-        "descripcion";
-
-
-    descripcion.textContent =
-        seccion.descripcion
-        ||
-        "Material académico disponible para este curso.";
-
-
-
-    /* -------------------------
-       ACCESO
-    ------------------------- */
-
-    const acceso =
-        document.createElement(
-            "span"
-        );
-
-
-    const tipo =
-        normalizarTexto(
-            seccion.tipoAcceso
-        );
-
-
-
-    if (
-        tipo === "restringido"
-    ) {
-
-
-        acceso.className =
-            "acceso restringido";
-
-
-        acceso.textContent =
-            "🔒 Acceso restringido";
-
-
-    }
-
-    else {
-
-
-        acceso.className =
-            "acceso publico";
-
-
-        acceso.textContent =
-            "● Acceso público";
-
-    }
-
-
-
-    /* -------------------------
-       BOTÓN
-    ------------------------- */
-
-    const boton =
-        document.createElement(
-            "a"
-        );
-
-
-    boton.className =
-        "boton";
-
-
-    boton.href =
-        validarUrl(
-            seccion.driveUrl
-        );
-
-
-    boton.target =
-        "_blank";
-
-
-    boton.rel =
-        "noopener noreferrer";
-
-
-
-    boton.textContent =
-        tipo === "restringido"
-        ?
-        "Abrir recurso restringido ↗"
-        :
-        "Abrir biblioteca ↗";
-
-
-
-    /* -------------------------
-       ENSAMBLAR
-    ------------------------- */
-
-    card.append(
-        titulo,
-        ciclo,
-        descripcion,
-        acceso,
-        boton
-    );
-
-
-    return card;
-
-}
-
-
-
-/* =====================================================
-   CONTADOR
-===================================================== */
-
-function actualizarContador(
-    cantidad
-) {
-
-
-    if (
-        cantidad === 1
-    ) {
-
-
-        contador.textContent =
-            "1 recurso encontrado";
-
-
-    }
-
-    else {
-
-
-        contador.textContent =
-            `${cantidad} recursos encontrados`;
-
-    }
-
-}
-
-
-
-/* =====================================================
-   NORMALIZAR TEXTO
-===================================================== */
-
-function normalizarTexto(
-    valor
-) {
-
+function normalizarTexto(valor) {
 
     return String(
         valor || ""
@@ -782,17 +270,9 @@ function normalizarTexto(
 }
 
 
+function convertirRomano(ciclo) {
 
-/* =====================================================
-   CONVERTIR CICLO A ROMANO
-===================================================== */
-
-function convertirCicloRomano(
-    ciclo
-) {
-
-
-    const numerosRomanos = {
+    const romanos = {
 
         1: "I",
         2: "II",
@@ -807,13 +287,11 @@ function convertirCicloRomano(
 
     };
 
-
     const numero =
         Number(ciclo);
 
-
     return (
-        numerosRomanos[numero]
+        romanos[numero]
         ||
         ciclo
     );
@@ -821,42 +299,647 @@ function convertirCicloRomano(
 }
 
 
+/* =====================================================
+   ORDEN
+===================================================== */
+
+function ordenarSecciones() {
+
+    secciones.sort(
+        (a, b) => {
+
+            const cicloA =
+                Number(a.ciclo) || 0;
+
+            const cicloB =
+                Number(b.ciclo) || 0;
+
+
+            if (
+                cicloA !== cicloB
+            ) {
+
+                return cicloA - cicloB;
+
+            }
+
+
+            return (
+                Number(a.orden || 0)
+                -
+                Number(b.orden || 0)
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+function actualizarEstadisticas() {
+
+    const ciclos =
+        new Set(
+            secciones.map(
+                s => String(s.ciclo)
+            )
+        );
+
+
+    const publicos =
+        secciones.filter(
+            s =>
+                normalizarTexto(
+                    s.tipoAcceso
+                ) === "publico"
+        ).length;
+
+
+    const restringidos =
+        secciones.filter(
+            s =>
+                normalizarTexto(
+                    s.tipoAcceso
+                ) === "restringido"
+        ).length;
+
+
+    statRecursos.textContent =
+        secciones.length;
+
+    statCiclos.textContent =
+        ciclos.size;
+
+    statPublicos.textContent =
+        publicos;
+
+    statRestringidos.textContent =
+        restringidos;
+
+}
+
+
+/* =====================================================
+   SELECT DE CICLOS
+===================================================== */
+
+function generarFiltroCiclos() {
+
+    filtroCiclo.innerHTML = `
+        <option value="">
+            Todos los ciclos
+        </option>
+    `;
+
+
+    const ciclos =
+        [
+            ...new Set(
+                secciones
+                    .map(
+                        s =>
+                            String(
+                                s.ciclo
+                            ).trim()
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    ciclos.sort(
+        (a, b) =>
+            Number(a) - Number(b)
+    );
+
+
+    ciclos.forEach(
+        ciclo => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                ciclo;
+
+            option.textContent =
+                `Ciclo ${convertirRomano(ciclo)}`;
+
+            filtroCiclo.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   TARJETAS DE CICLOS
+===================================================== */
+
+function generarTarjetasCiclos() {
+
+    listaCiclos.innerHTML =
+        "";
+
+
+    const conteo =
+        {};
+
+
+    secciones.forEach(
+        seccion => {
+
+            const ciclo =
+                String(
+                    seccion.ciclo
+                ).trim();
+
+            conteo[ciclo] =
+                (conteo[ciclo] || 0)
+                + 1;
+
+        }
+    );
+
+
+    Object
+        .keys(conteo)
+        .sort(
+            (a, b) =>
+                Number(a) - Number(b)
+        )
+        .forEach(
+            ciclo => {
+
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                button.type =
+                    "button";
+
+
+                button.className =
+                    "cycle-card";
+
+
+                button.innerHTML = `
+
+                    <strong>
+                        Ciclo
+                    </strong>
+
+                    <span class="cycle-number">
+                        ${convertirRomano(ciclo)}
+                    </span>
+
+                    <span class="cycle-count">
+                        ${conteo[ciclo]}
+                        ${
+                            conteo[ciclo] === 1
+                            ?
+                            "recurso"
+                            :
+                            "recursos"
+                        }
+                    </span>
+
+                `;
+
+
+                button.addEventListener(
+                    "click",
+                    () =>
+                        seleccionarCiclo(
+                            ciclo
+                        )
+                );
+
+
+                listaCiclos.appendChild(
+                    button
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   SELECCIONAR CICLO
+===================================================== */
+
+function seleccionarCiclo(
+    ciclo
+) {
+
+    filtroCiclo.value =
+        String(ciclo);
+
+    buscador.value =
+        "";
+
+    filtroAcceso.value =
+        "";
+
+    aplicarFiltros();
+
+    mostrarTodos.classList.remove(
+        "hidden"
+    );
+
+
+    document
+        .getElementById(
+            "biblioteca"
+        )
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+function aplicarFiltros() {
+
+    const texto =
+        normalizarTexto(
+            buscador.value
+        );
+
+
+    const ciclo =
+        String(
+            filtroCiclo.value
+        );
+
+
+    const acceso =
+        normalizarTexto(
+            filtroAcceso.value
+        );
+
+
+    const resultados =
+        secciones.filter(
+            seccion => {
+
+
+                const nombre =
+                    normalizarTexto(
+                        seccion.nombre
+                    );
+
+
+                const descripcion =
+                    normalizarTexto(
+                        seccion.descripcion
+                    );
+
+
+                const cicloSeccion =
+                    String(
+                        seccion.ciclo
+                    );
+
+
+                const accesoSeccion =
+                    normalizarTexto(
+                        seccion.tipoAcceso
+                    );
+
+
+                const coincideTexto =
+
+                    !texto
+                    ||
+                    nombre.includes(texto)
+                    ||
+                    descripcion.includes(texto);
+
+
+                const coincideCiclo =
+
+                    !ciclo
+                    ||
+                    cicloSeccion === ciclo;
+
+
+                const coincideAcceso =
+
+                    !acceso
+                    ||
+                    accesoSeccion === acceso;
+
+
+                return (
+
+                    coincideTexto
+                    &&
+                    coincideCiclo
+                    &&
+                    coincideAcceso
+
+                );
+
+            }
+        );
+
+
+    mostrarSecciones(
+        resultados
+    );
+
+
+    if (
+        ciclo
+        ||
+        texto
+        ||
+        acceso
+    ) {
+
+        mostrarTodos.classList.remove(
+            "hidden"
+        );
+
+    }
+
+    else {
+
+        mostrarTodos.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MOSTRAR TARJETAS
+===================================================== */
+
+function mostrarSecciones(
+    lista
+) {
+
+    contenedor.innerHTML =
+        "";
+
+
+    contador.textContent =
+        lista.length === 1
+
+        ? "1 recurso encontrado"
+
+        : `${lista.length} recursos encontrados`;
+
+
+    if (
+        lista.length === 0
+    ) {
+
+        contenedor.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    No se encontraron recursos
+                </strong>
+
+                <p>
+                    Modifica los filtros
+                    o realiza otra búsqueda.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.forEach(
+        seccion => {
+
+            contenedor.appendChild(
+                crearTarjeta(
+                    seccion
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+function crearTarjeta(
+    seccion
+) {
+
+    const article =
+        document.createElement(
+            "article"
+        );
+
+
+    article.className =
+        "resource-card";
+
+
+    const tipo =
+        normalizarTexto(
+            seccion.tipoAcceso
+        );
+
+
+    const restringido =
+        tipo === "restringido";
+
+
+    const url =
+        validarUrl(
+            seccion.driveUrl
+        );
+
+
+    article.innerHTML = `
+
+        <span class="resource-cycle">
+
+            Ciclo
+            ${convertirRomano(
+                seccion.ciclo
+            )}
+
+        </span>
+
+
+        <h3>
+            ${escaparHTML(
+                seccion.nombre
+            )}
+        </h3>
+
+
+        <p class="resource-description">
+
+            ${
+                escaparHTML(
+                    seccion.descripcion
+                )
+                ||
+                "Material académico disponible para este curso."
+            }
+
+        </p>
+
+
+        <span
+            class="
+                access-badge
+                ${
+                    restringido
+                    ?
+                    "access-restricted"
+                    :
+                    "access-public"
+                }
+            "
+        >
+
+            ${
+                restringido
+                ?
+                "Acceso restringido"
+                :
+                "Acceso público"
+            }
+
+        </span>
+
+
+        <a
+            class="resource-button"
+            href="${url}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            ${
+                restringido
+                    ?
+                    "Abrir recurso"
+                    :
+                    "Abrir biblioteca"
+            }
+
+            <span aria-hidden="true">
+                ↗
+            </span>
+
+        </a>
+
+    `;
+
+
+    return article;
+
+}
+
+
+/* =====================================================
+   ESCAPAR TEXTO
+===================================================== */
+
+function escaparHTML(
+    texto
+) {
+
+    return String(
+        texto || ""
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
 
 /* =====================================================
    VALIDAR URL
 ===================================================== */
 
 function validarUrl(
-    url
+    valor
 ) {
-
-
-    const valor =
-        String(
-            url || ""
-        ).trim();
-
 
     try {
 
-
-        const destino =
-            new URL(valor);
+        const url =
+            new URL(
+                String(valor)
+            );
 
 
         if (
-            destino.protocol === "https:"
+            url.protocol === "https:"
         ) {
 
-
-            return destino.href;
+            return url.href;
 
         }
 
-
     }
 
-    catch (error) {
+    catch {
 
         console.warn(
             "URL inválida:",
@@ -871,15 +954,14 @@ function validarUrl(
 }
 
 
-
 /* =====================================================
-   ESTADO DE CARGA
+   ESTADOS
 ===================================================== */
 
 function mostrarCarga() {
 
-
     contenedor.innerHTML = `
+
         <div class="loading-state">
 
             <div class="spinner"></div>
@@ -889,22 +971,18 @@ function mostrarCarga() {
             </p>
 
         </div>
+
     `;
 
 }
 
 
-
-/* =====================================================
-   ERROR
-===================================================== */
-
 function mostrarError(
     mensaje
 ) {
 
-
     contenedor.innerHTML = `
+
         <div class="error-state">
 
             <strong>
@@ -916,10 +994,30 @@ function mostrarError(
             </p>
 
         </div>
+
     `;
 
 }
 
+
+/* =====================================================
+   LIMPIAR FILTROS
+===================================================== */
+
+function restablecerFiltros() {
+
+    buscador.value =
+        "";
+
+    filtroCiclo.value =
+        "";
+
+    filtroAcceso.value =
+        "";
+
+    aplicarFiltros();
+
+}
 
 
 /* =====================================================
@@ -944,28 +1042,61 @@ filtroAcceso.addEventListener(
 );
 
 
-
 limpiarFiltros.addEventListener(
+    "click",
+    restablecerFiltros
+);
+
+
+mostrarTodos.addEventListener(
+    "click",
+    restablecerFiltros
+);
+
+
+/* =====================================================
+   MENÚ MÓVIL
+===================================================== */
+
+menuButton.addEventListener(
     "click",
     () => {
 
-
-        buscador.value =
-            "";
-
-
-        filtroCiclo.value =
-            "";
+        const abierto =
+            mainNav.classList.toggle(
+                "open"
+            );
 
 
-        filtroAcceso.value =
-            "";
-
-
-        aplicarFiltros();
-
-
-        buscador.focus();
+        menuButton.setAttribute(
+            "aria-expanded",
+            abierto
+        );
 
     }
 );
+
+
+mainNav
+    .querySelectorAll("a")
+    .forEach(
+        enlace => {
+
+            enlace.addEventListener(
+                "click",
+                () => {
+
+                    mainNav.classList.remove(
+                        "open"
+                    );
+
+                    menuButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+            );
+
+        }
+    );
