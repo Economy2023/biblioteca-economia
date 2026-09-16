@@ -15,7 +15,7 @@
     >
 
     <title>
-        Repositorio Académico | Escuela Profesional de Economía
+        Escuela Profesional de Economía | Repositorio Académico
     </title>
 
     <link
@@ -23,6 +23,7 @@
         href="styles.css"
     >
 
+    <!-- Google Sheets -->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script
@@ -34,507 +35,409 @@
 
 <body>
 
-    <!-- =========================================
-         HEADER
-    ========================================== -->
+    <!-- ==========================================
+         ENCABEZADO
+    =========================================== -->
 
     <header class="site-header">
 
-        <div class="header-accent"></div>
+        <a
+            href="#inicio"
+            class="brand"
+        >
 
-        <div class="container header-content">
+            <div class="brand-mark">
+                E
+            </div>
 
-            <a
-                href="#inicio"
-                class="brand"
-                aria-label="Ir al inicio"
-            >
+            <div class="brand-copy">
 
-                <div class="brand-logo">
-                    E
-                </div>
+                <strong>
+                    Escuela Profesional de Economía
+                </strong>
 
-                <div class="brand-info">
+                <span>
+                    Repositorio Académico
+                </span>
 
-                    <strong>
-                        Escuela Profesional de Economía
-                    </strong>
+            </div>
 
-                    <span>
-                        Repositorio Académico
-                    </span>
-
-                </div>
-
-            </a>
+        </a>
 
 
-            <button
-                id="menuButton"
-                class="menu-button"
-                aria-label="Abrir menú"
-                aria-expanded="false"
-            >
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+        <div class="header-right">
 
-
-            <nav
-                id="mainNav"
-                class="main-nav"
-                aria-label="Navegación principal"
-            >
-
-                <a href="#inicio">
-                    Inicio
-                </a>
-
-                <a href="#ciclos">
-                    Ciclos
-                </a>
-
-                <a href="#biblioteca">
-                    Biblioteca
-                </a>
-
-                <a href="#informacion">
-                    Acerca del repositorio
-                </a>
-
-            </nav>
+            <span>
+                Biblioteca Digital
+            </span>
 
         </div>
 
     </header>
 
 
-    <!-- =========================================
-         HERO
-    ========================================== -->
+
+    <!-- ==========================================
+         HERO / BIBLIOTECA
+    =========================================== -->
 
     <main>
 
         <section
-            class="hero"
+            class="library-hero"
             id="inicio"
         >
 
-            <div class="hero-decoration hero-decoration-one"></div>
-            <div class="hero-decoration hero-decoration-two"></div>
+
+            <!-- ==================================
+                 PANEL IZQUIERDO
+            =================================== -->
+
+            <div class="hero-copy">
+
+                <div class="hero-copy-inner">
 
 
-            <div class="container hero-content">
-
-                <div class="hero-eyebrow">
-                    Repositorio Académico Institucional
-                </div>
-
-
-                <h1>
-                    Escuela Profesional
-                    <span>de Economía</span>
-                </h1>
-
-
-                <p class="hero-description">
-
-                    Accede de forma organizada a bibliografía,
-                    materiales académicos y recursos de apoyo
-                    para tu formación profesional.
-
-                </p>
-
-
-                <div class="hero-search">
-
-                    <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                    >
-                        <path
-                            d="M11 4a7 7 0 1 0 4.9 12l4.55 4.55 1.4-1.4-4.55-4.55A7 7 0 0 0 11 4Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"
-                        />
-                    </svg>
-
-                    <input
-                        type="search"
-                        id="buscador"
-                        placeholder="Buscar curso o recurso..."
-                        autocomplete="off"
-                        aria-label="Buscar en el repositorio"
-                    >
-
-                </div>
-
-
-                <div class="hero-meta">
-
-                    <span>
-                        Bibliografía académica
+                    <span class="eyebrow">
+                        Repositorio Académico
                     </span>
 
-                    <i></i>
 
-                    <span>
-                        Recursos por ciclo
-                    </span>
-
-                    <i></i>
-
-                    <span>
-                        Acceso mediante Google Drive
-                    </span>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             ESTADÍSTICAS
-        ========================================== -->
-
-        <section class="stats-section">
-
-            <div class="container">
-
-                <div class="stats-grid">
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Recursos disponibles
+                    <h1>
+                        Tu biblioteca
+                        <span>
+                            de Economía.
                         </span>
-
-                        <strong id="statRecursos">
-                            —
-                        </strong>
-
-                    </article>
+                    </h1>
 
 
-                    <article class="stat-card">
+                    <p class="hero-description">
 
-                        <span class="stat-label">
-                            Ciclos académicos
-                        </span>
+                        Bibliografía, libros y recursos académicos
+                        organizados según los diez semestres de la
+                        Escuela Profesional de Economía.
 
-                        <strong id="statCiclos">
-                            —
-                        </strong>
-
-                    </article>
+                    </p>
 
 
-                    <article class="stat-card">
+                    <!-- BUSCADOR -->
 
-                        <span class="stat-label">
-                            Acceso público
-                        </span>
+                    <div class="search-box">
 
-                        <strong id="statPublicos">
-                            —
-                        </strong>
-
-                    </article>
-
-
-                    <article class="stat-card">
-
-                        <span class="stat-label">
-                            Acceso restringido
-                        </span>
-
-                        <strong id="statRestringidos">
-                            —
-                        </strong>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M11 4a7 7 0 1 0 4.9 12l4.55 4.55
+                                1.4-1.4-4.55-4.55A7 7 0 0 0 11 4Zm0
+                                2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"
+                            />
+                        </svg>
 
 
-        <!-- =========================================
-             CICLOS
-        ========================================== -->
+                        <input
+                            id="buscador"
+                            type="search"
+                            placeholder="Buscar un curso..."
+                            autocomplete="off"
+                            aria-label="Buscar curso"
+                        >
 
-        <section
-            class="cycles-section"
-            id="ciclos"
-        >
+                    </div>
 
-            <div class="container">
 
-                <div class="section-heading">
+                    <!-- INDICADORES -->
 
-                    <div>
+                    <div class="hero-stats">
 
-                        <span class="section-kicker">
-                            Organización académica
-                        </span>
+                        <div>
 
-                        <h2>
-                            Explorar por ciclo
-                        </h2>
+                            <strong id="totalCursos">
+                                —
+                            </strong>
+
+                            <span>
+                                cursos
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                10
+                            </strong>
+
+                            <span>
+                                semestres
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-help">
+
+                        <span class="help-line"></span>
 
                         <p>
-                            Selecciona un ciclo para visualizar
-                            únicamente sus recursos académicos.
+                            Selecciona un libro del estante
+                            para consultar sus cursos.
                         </p>
 
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="listaCiclos"
-                    class="cycles-grid"
-                >
-
-                    <div class="loading-inline">
-                        Cargando ciclos...
                     </div>
 
                 </div>
 
             </div>
 
+
+
+            <!-- ==================================
+                 ESTANTERÍA
+            =================================== -->
+
+            <div class="books-area">
+
+
+                <div class="books-area-header">
+
+                    <span>
+                        Plan de estudios
+                    </span>
+
+                    <span>
+                        I — X
+                    </span>
+
+                </div>
+
+
+                <div class="shelf-wrapper">
+
+
+                    <div
+                        id="semesterBooks"
+                        class="bookshelf"
+                        aria-label="Semestres"
+                    >
+
+                        <!--
+                            Los 10 libros se generan
+                            automáticamente con JavaScript
+                        -->
+
+                    </div>
+
+
+                    <div class="shelf"></div>
+
+                    <div class="shelf-shadow"></div>
+
+
+                </div>
+
+
+                <div class="books-instruction">
+
+                    <span>
+                        Selecciona un semestre
+                    </span>
+
+                    <span aria-hidden="true">
+                        ↓
+                    </span>
+
+                </div>
+
+
+            </div>
+
         </section>
 
 
-        <!-- =========================================
-             BIBLIOTECA
-        ========================================== -->
+
+        <!-- ==========================================
+             PANEL DE CURSOS
+        =========================================== -->
 
         <section
-            class="library-section"
-            id="biblioteca"
+            class="courses-section"
+            id="cursos"
         >
 
-            <div class="container">
+            <div class="courses-container">
 
-                <div class="section-heading library-heading">
+
+                <!-- TÍTULO -->
+
+                <div class="courses-heading">
 
                     <div>
 
-                        <span class="section-kicker">
-                            Biblioteca digital
+                        <span
+                            id="coursesEyebrow"
+                            class="courses-eyebrow"
+                        >
+                            Biblioteca académica
                         </span>
 
-                        <h2>
-                            Recursos académicos
+
+                        <h2 id="semesterTitle">
+
+                            Selecciona un semestre
+
                         </h2>
 
-                        <p id="contador">
-                            Cargando recursos...
+
+                        <p id="semesterDescription">
+
+                            Elige uno de los libros del estante
+                            para visualizar los cursos disponibles.
+
                         </p>
 
                     </div>
 
 
-                    <button
-                        id="mostrarTodos"
-                        type="button"
-                        class="link-button hidden"
+                    <div
+                        id="semesterNumber"
+                        class="semester-big-number"
+                        aria-hidden="true"
                     >
-                        Mostrar todos los recursos
-                    </button>
-
-                </div>
-
-
-                <!-- FILTROS -->
-
-                <div class="filters-panel">
-
-                    <div class="filter-group">
-
-                        <label for="filtroCiclo">
-                            Ciclo académico
-                        </label>
-
-                        <select id="filtroCiclo">
-
-                            <option value="">
-                                Todos los ciclos
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="filter-group">
-
-                        <label for="filtroAcceso">
-                            Tipo de acceso
-                        </label>
-
-                        <select id="filtroAcceso">
-
-                            <option value="">
-                                Todos los accesos
-                            </option>
-
-                            <option value="publico">
-                                Acceso público
-                            </option>
-
-                            <option value="restringido">
-                                Acceso restringido
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="filters-actions">
-
-                        <button
-                            id="limpiarFiltros"
-                            type="button"
-                            class="button-secondary"
-                        >
-                            Limpiar filtros
-                        </button>
-
+                        —
                     </div>
 
                 </div>
 
 
-                <!-- RESULTADOS -->
+
+                <!-- CURSOS -->
 
                 <div
-                    id="secciones"
-                    class="resources-grid"
+                    id="coursesGrid"
+                    class="courses-grid"
                     aria-live="polite"
                 >
 
-                    <div class="loading-state">
+                    <div class="initial-state">
 
-                        <div class="spinner"></div>
-
-                        <p>
-                            Cargando biblioteca...
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             INFORMACIÓN
-        ========================================== -->
-
-        <section
-            class="about-section"
-            id="informacion"
-        >
-
-            <div class="container">
-
-                <div class="about-panel">
-
-                    <div class="about-content">
-
-                        <span class="section-kicker">
-                            Información
+                        <span>
+                            01 — 10
                         </span>
 
-                        <h2>
-                            Repositorio de la Escuela Profesional de Economía
-                        </h2>
-
                         <p>
-
-                            Este espacio tiene como finalidad facilitar
-                            el acceso ordenado a bibliografía y materiales
-                            académicos vinculados con la formación profesional
-                            en Economía.
-
-                        </p>
-
-                        <p>
-
-                            Los recursos pueden tener acceso público o
-                            restringido. En los recursos restringidos,
-                            Google Drive verifica si la cuenta utilizada
-                            cuenta con autorización.
-
+                            Los recursos aparecerán aquí
+                            al seleccionar un semestre.
                         </p>
 
                     </div>
 
-
-                    <aside class="about-note">
-
-                        <strong>
-                            Importante
-                        </strong>
-
-                        <p>
-                            La web organiza y enlaza los recursos.
-                            Los permisos de acceso son administrados
-                            directamente mediante Google Drive.
-                        </p>
-
-                    </aside>
-
                 </div>
+
 
             </div>
 
         </section>
+
+
+
+        <!-- ==========================================
+             INFORMACIÓN
+        =========================================== -->
+
+        <section class="information-section">
+
+            <div class="information-grid">
+
+
+                <div class="information-title">
+
+                    <span>
+                        Biblioteca
+                    </span>
+
+                    <h2>
+                        Recursos para
+                        aprender Economía.
+                    </h2>
+
+                </div>
+
+
+                <div class="information-text">
+
+                    <p>
+
+                        Este repositorio organiza los materiales
+                        académicos de la Escuela Profesional de
+                        Economía de acuerdo con su semestre y curso.
+
+                    </p>
+
+                    <p>
+
+                        Los permisos para materiales restringidos
+                        son administrados directamente mediante
+                        Google Drive.
+
+                    </p>
+
+                </div>
+
+
+                <div class="information-colors">
+
+                    <div class="color-block blue">
+                        Economía
+                    </div>
+
+                    <div class="color-block yellow">
+                        Formación
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
 
     </main>
 
 
-    <!-- =========================================
+
+    <!-- ==========================================
          FOOTER
-    ========================================== -->
+    =========================================== -->
 
     <footer class="site-footer">
 
-        <div class="container footer-content">
+        <div>
 
-            <div>
+            <strong>
+                Escuela Profesional de Economía
+            </strong>
 
-                <strong>
-                    Escuela Profesional de Economía
-                </strong>
+            <span>
+                Repositorio Académico
+            </span>
 
-                <p>
-                    Repositorio Académico
-                </p>
-
-            </div>
+        </div>
 
 
-            <div class="footer-year">
+        <div>
 
-                <span id="anioActual"></span>
-
-            </div>
+            <span id="footerYear"></span>
 
         </div>
 
     </footer>
+
 
 </body>
 
