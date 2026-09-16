@@ -1,105 +1,158 @@
-/* =====================================================
+/* ======================================================
    CONFIGURACIÓN
-===================================================== */
+====================================================== */
 
 const SHEET_ID = "12NOm3qbdM7X0eA6NPCafV35p6rhENyCcanIs47ndLuw";
 
 const SHEET_NAME = "Secciones";
 
 
-/* =====================================================
+/* ======================================================
    DATOS
-===================================================== */
+====================================================== */
 
-let secciones = [];
+let cursos = [];
+
+let semestreActivo = null;
 
 
-/* =====================================================
-   DOM
-===================================================== */
+/* ======================================================
+   ELEMENTOS
+====================================================== */
+
+const semesterBooks =
+    document.getElementById(
+        "semesterBooks"
+    );
+
+
+const coursesGrid =
+    document.getElementById(
+        "coursesGrid"
+    );
+
+
+const semesterTitle =
+    document.getElementById(
+        "semesterTitle"
+    );
+
+
+const semesterDescription =
+    document.getElementById(
+        "semesterDescription"
+    );
+
+
+const semesterNumber =
+    document.getElementById(
+        "semesterNumber"
+    );
+
+
+const coursesEyebrow =
+    document.getElementById(
+        "coursesEyebrow"
+    );
+
 
 const buscador =
-    document.getElementById("buscador");
-
-const filtroCiclo =
-    document.getElementById("filtroCiclo");
-
-const filtroAcceso =
-    document.getElementById("filtroAcceso");
-
-const limpiarFiltros =
-    document.getElementById("limpiarFiltros");
-
-const mostrarTodos =
-    document.getElementById("mostrarTodos");
-
-const contador =
-    document.getElementById("contador");
-
-const contenedor =
-    document.getElementById("secciones");
-
-const listaCiclos =
-    document.getElementById("listaCiclos");
-
-const menuButton =
-    document.getElementById("menuButton");
-
-const mainNav =
-    document.getElementById("mainNav");
+    document.getElementById(
+        "buscador"
+    );
 
 
-/* =====================================================
-   ESTADÍSTICAS
-===================================================== */
-
-const statRecursos =
-    document.getElementById("statRecursos");
-
-const statCiclos =
-    document.getElementById("statCiclos");
-
-const statPublicos =
-    document.getElementById("statPublicos");
-
-const statRestringidos =
-    document.getElementById("statRestringidos");
+const totalCursos =
+    document.getElementById(
+        "totalCursos"
+    );
 
 
-/* =====================================================
+/* ======================================================
    FOOTER
-===================================================== */
+====================================================== */
 
 document.getElementById(
-    "anioActual"
+    "footerYear"
 ).textContent =
     `© ${new Date().getFullYear()}`;
 
 
-/* =====================================================
+/* ======================================================
+   ROMANOS
+====================================================== */
+
+const ROMANOS = {
+
+    1: "I",
+    2: "II",
+    3: "III",
+    4: "IV",
+    5: "V",
+    6: "VI",
+    7: "VII",
+    8: "VIII",
+    9: "IX",
+    10: "X"
+
+};
+
+
+/* ======================================================
+   ALTURA DE LOS LIBROS
+====================================================== */
+
+const ALTURAS = {
+
+    1: 88,
+    2: 94,
+    3: 83,
+    4: 91,
+    5: 97,
+    6: 86,
+    7: 93,
+    8: 81,
+    9: 96,
+    10: 89
+
+};
+
+
+/* ======================================================
    GOOGLE SHEETS
-===================================================== */
+====================================================== */
 
-google.charts.load("current");
-
-google.charts.setOnLoadCallback(
-    cargarSecciones
+google.charts.load(
+    "current"
 );
 
 
-function cargarSecciones() {
+google.charts.setOnLoadCallback(
+    cargarCursos
+);
 
-    mostrarCarga();
+
+
+function cargarCursos() {
 
     const url =
+
         `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`
+
         +
+
         `?sheet=${encodeURIComponent(SHEET_NAME)}`
+
         +
+
         `&headers=1`;
 
+
     const query =
-        new google.visualization.Query(url);
+        new google.visualization.Query(
+            url
+        );
+
 
     query.send(
         procesarRespuesta
@@ -108,30 +161,36 @@ function cargarSecciones() {
 }
 
 
-/* =====================================================
-   PROCESAR DATOS
-===================================================== */
 
-function procesarRespuesta(response) {
+/* ======================================================
+   PROCESAR RESPUESTA
+====================================================== */
 
-    if (response.isError()) {
+function procesarRespuesta(
+    response
+) {
+
+    if (
+        response.isError()
+    ) {
 
         console.error(
             response.getMessage()
         );
 
-        mostrarError(
-            "No fue posible cargar el catálogo."
-        );
+
+        mostrarError();
 
         return;
 
     }
 
+
     const data =
         response.getDataTable();
 
-    secciones = [];
+
+    cursos = [];
 
 
     for (
@@ -140,7 +199,7 @@ function procesarRespuesta(response) {
         fila++
     ) {
 
-        const seccion = {
+        const curso = {
 
             id:
                 obtenerValor(
@@ -157,10 +216,12 @@ function procesarRespuesta(response) {
                 ),
 
             ciclo:
-                obtenerValor(
-                    data,
-                    fila,
-                    2
+                Number(
+                    obtenerValor(
+                        data,
+                        fila,
+                        2
+                    )
                 ),
 
             descripcion:
@@ -192,23 +253,31 @@ function procesarRespuesta(response) {
                 ),
 
             orden:
-                obtenerValor(
-                    data,
-                    fila,
-                    7
-                )
+                Number(
+                    obtenerValor(
+                        data,
+                        fila,
+                        7
+                    )
+                ) || 0
 
         };
 
 
         if (
-            normalizarTexto(
-                seccion.activo
-            ) === "si"
+
+            normalizar(
+                curso.activo
+            )
+
+            ===
+
+            "si"
+
         ) {
 
-            secciones.push(
-                seccion
+            cursos.push(
+                curso
             );
 
         }
@@ -216,22 +285,22 @@ function procesarRespuesta(response) {
     }
 
 
-    ordenarSecciones();
+    ordenarCursos();
 
-    generarFiltroCiclos();
 
-    generarTarjetasCiclos();
+    totalCursos.textContent =
+        cursos.length;
 
-    actualizarEstadisticas();
 
-    aplicarFiltros();
+    crearEstanteria();
 
 }
 
 
-/* =====================================================
-   UTILIDADES
-===================================================== */
+
+/* ======================================================
+   OBTENER CELDA
+====================================================== */
 
 function obtenerValor(
     data,
@@ -245,12 +314,650 @@ function obtenerValor(
             columna
         );
 
+
     return valor ?? "";
 
 }
 
 
-function normalizarTexto(valor) {
+
+/* ======================================================
+   ORDENAR
+====================================================== */
+
+function ordenarCursos() {
+
+    cursos.sort(
+
+        (a, b) => {
+
+            if (
+                a.ciclo !== b.ciclo
+            ) {
+
+                return (
+                    a.ciclo
+                    -
+                    b.ciclo
+                );
+
+            }
+
+
+            return (
+                a.orden
+                -
+                b.orden
+            );
+
+        }
+
+    );
+
+}
+
+
+
+/* ======================================================
+   CREAR LOS 10 LIBROS
+====================================================== */
+
+function crearEstanteria() {
+
+    semesterBooks.innerHTML =
+        "";
+
+
+    for (
+        let semestre = 1;
+        semestre <= 10;
+        semestre++
+    ) {
+
+        const cantidad =
+            cursos.filter(
+
+                curso =>
+                    curso.ciclo === semestre
+
+            ).length;
+
+
+        const libro =
+            document.createElement(
+                "button"
+            );
+
+
+        libro.type =
+            "button";
+
+
+        libro.className =
+            "semester-book";
+
+
+        libro.dataset.semestre =
+            semestre;
+
+
+        libro.style.setProperty(
+
+            "--book-height",
+
+            `${ALTURAS[semestre]}%`
+
+        );
+
+
+        libro.setAttribute(
+
+            "aria-label",
+
+            `${ROMANOS[semestre]} semestre, ${cantidad} cursos`
+
+        );
+
+
+        libro.innerHTML = `
+
+            <span class="book-title">
+
+                ${ROMANOS[semestre]} SEMESTRE
+
+            </span>
+
+
+            <span class="book-count">
+
+                ${cantidad}
+
+            </span>
+
+        `;
+
+
+        libro.addEventListener(
+
+            "click",
+
+            () => {
+
+                seleccionarSemestre(
+                    semestre
+                );
+
+            }
+
+        );
+
+
+        semesterBooks.appendChild(
+            libro
+        );
+
+    }
+
+}
+
+
+
+/* ======================================================
+   SELECCIONAR SEMESTRE
+====================================================== */
+
+function seleccionarSemestre(
+    semestre
+) {
+
+    semestreActivo =
+        semestre;
+
+
+    buscador.value =
+        "";
+
+
+    document
+        .querySelectorAll(
+            ".semester-book"
+        )
+        .forEach(
+
+            libro => {
+
+                libro.classList.remove(
+                    "active"
+                );
+
+            }
+
+        );
+
+
+    const seleccionado =
+        document.querySelector(
+
+            `.semester-book[data-semestre="${semestre}"]`
+
+        );
+
+
+    if (
+        seleccionado
+    ) {
+
+        seleccionado.classList.add(
+            "active"
+        );
+
+    }
+
+
+    const cursosSemestre =
+        cursos.filter(
+
+            curso =>
+                curso.ciclo === semestre
+
+        );
+
+
+    semesterTitle.textContent =
+        `${ROMANOS[semestre]} semestre`;
+
+
+    semesterNumber.textContent =
+        ROMANOS[semestre];
+
+
+    coursesEyebrow.textContent =
+        "Plan de estudios";
+
+
+    semesterDescription.textContent =
+
+        `${cursosSemestre.length} ${
+
+            cursosSemestre.length === 1
+                ?
+                "curso disponible"
+                :
+                "cursos disponibles"
+
+        } en este semestre.`;
+
+
+    mostrarCursos(
+        cursosSemestre
+    );
+
+
+    document
+        .getElementById(
+            "cursos"
+        )
+        .scrollIntoView({
+
+            behavior:
+                "smooth",
+
+            block:
+                "start"
+
+        });
+
+}
+
+
+
+/* ======================================================
+   MOSTRAR CURSOS
+====================================================== */
+
+function mostrarCursos(
+    lista
+) {
+
+    coursesGrid.innerHTML =
+        "";
+
+
+    if (
+        lista.length === 0
+    ) {
+
+        coursesGrid.innerHTML = `
+
+            <div class="empty-state">
+
+                <strong>
+                    Sin cursos registrados
+                </strong>
+
+                <p>
+                    Todavía no hay recursos
+                    registrados para este semestre.
+                </p>
+
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    lista.forEach(
+
+        (
+            curso,
+            index
+        ) => {
+
+            const card =
+                crearCurso(
+                    curso,
+                    index
+                );
+
+
+            coursesGrid.appendChild(
+                card
+            );
+
+        }
+
+    );
+
+}
+
+
+
+/* ======================================================
+   CREAR CURSO
+====================================================== */
+
+function crearCurso(
+    curso,
+    index
+) {
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "course-card";
+
+
+    const restringido =
+
+        normalizar(
+            curso.tipoAcceso
+        )
+
+        ===
+
+        "restringido";
+
+
+    const url =
+        validarURL(
+            curso.driveUrl
+        );
+
+
+    const numero =
+        String(
+            index + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    card.innerHTML = `
+
+        <span class="course-number">
+
+            ${numero}
+
+        </span>
+
+
+        <h3>
+
+            ${escaparHTML(
+                curso.nombre
+            )}
+
+        </h3>
+
+
+        <p>
+
+            ${
+
+                escaparHTML(
+                    curso.descripcion
+                )
+
+                ||
+
+                "Material académico disponible para este curso."
+
+            }
+
+        </p>
+
+
+        <div class="course-meta">
+
+
+            <span class="access">
+
+                ${
+
+                    restringido
+                        ?
+                        "Acceso restringido"
+                        :
+                        "Acceso público"
+
+                }
+
+            </span>
+
+
+            <a
+
+                class="course-link"
+
+                href="${url}"
+
+                target="_blank"
+
+                rel="noopener noreferrer"
+
+                aria-label="Abrir ${escaparHTML(curso.nombre)}"
+
+            >
+
+                ↗
+
+            </a>
+
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+
+/* ======================================================
+   BUSCADOR
+====================================================== */
+
+buscador.addEventListener(
+
+    "input",
+
+    () => {
+
+        const texto =
+            normalizar(
+                buscador.value
+            );
+
+
+        if (
+            !texto
+        ) {
+
+            if (
+                semestreActivo
+            ) {
+
+                seleccionarSemestre(
+                    semestreActivo
+                );
+
+            }
+
+            else {
+
+                estadoInicial();
+
+            }
+
+
+            return;
+
+        }
+
+
+        document
+            .querySelectorAll(
+                ".semester-book"
+            )
+            .forEach(
+
+                libro =>
+                    libro.classList.remove(
+                        "active"
+                    )
+
+            );
+
+
+        const resultados =
+            cursos.filter(
+
+                curso => {
+
+                    const nombre =
+                        normalizar(
+                            curso.nombre
+                        );
+
+
+                    const descripcion =
+                        normalizar(
+                            curso.descripcion
+                        );
+
+
+                    return (
+
+                        nombre.includes(
+                            texto
+                        )
+
+                        ||
+
+                        descripcion.includes(
+                            texto
+                        )
+
+                    );
+
+                }
+
+            );
+
+
+        coursesEyebrow.textContent =
+            "Resultados";
+
+
+        semesterTitle.textContent =
+            "Búsqueda";
+
+
+        semesterNumber.textContent =
+            resultados.length;
+
+
+        semesterDescription.textContent =
+
+            resultados.length === 1
+
+            ?
+
+            "1 curso encontrado."
+
+            :
+
+            `${resultados.length} cursos encontrados.`;
+
+
+
+        mostrarCursos(
+            resultados
+        );
+
+
+
+        document
+            .getElementById(
+                "cursos"
+            )
+            .scrollIntoView({
+
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+
+            });
+
+    }
+
+);
+
+
+
+/* ======================================================
+   ESTADO INICIAL
+====================================================== */
+
+function estadoInicial() {
+
+    coursesEyebrow.textContent =
+        "Biblioteca académica";
+
+
+    semesterTitle.textContent =
+        "Selecciona un semestre";
+
+
+    semesterNumber.textContent =
+        "—";
+
+
+    semesterDescription.textContent =
+        "Elige uno de los libros del estante para visualizar los cursos disponibles.";
+
+
+    coursesGrid.innerHTML = `
+
+        <div class="initial-state">
+
+            <span>
+                01 — 10
+            </span>
+
+            <p>
+                Los recursos aparecerán aquí
+                al seleccionar un semestre.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* ======================================================
+   NORMALIZAR
+====================================================== */
+
+function normalizar(
+    valor
+) {
 
     return String(
         valor || ""
@@ -260,7 +967,9 @@ function normalizarTexto(valor) {
 
         .toLowerCase()
 
-        .normalize("NFD")
+        .normalize(
+            "NFD"
+        )
 
         .replace(
             /[\u0300-\u036f]/g,
@@ -270,612 +979,10 @@ function normalizarTexto(valor) {
 }
 
 
-function convertirRomano(ciclo) {
 
-    const romanos = {
-
-        1: "I",
-        2: "II",
-        3: "III",
-        4: "IV",
-        5: "V",
-        6: "VI",
-        7: "VII",
-        8: "VIII",
-        9: "IX",
-        10: "X"
-
-    };
-
-    const numero =
-        Number(ciclo);
-
-    return (
-        romanos[numero]
-        ||
-        ciclo
-    );
-
-}
-
-
-/* =====================================================
-   ORDEN
-===================================================== */
-
-function ordenarSecciones() {
-
-    secciones.sort(
-        (a, b) => {
-
-            const cicloA =
-                Number(a.ciclo) || 0;
-
-            const cicloB =
-                Number(b.ciclo) || 0;
-
-
-            if (
-                cicloA !== cicloB
-            ) {
-
-                return cicloA - cicloB;
-
-            }
-
-
-            return (
-                Number(a.orden || 0)
-                -
-                Number(b.orden || 0)
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   ESTADÍSTICAS
-===================================================== */
-
-function actualizarEstadisticas() {
-
-    const ciclos =
-        new Set(
-            secciones.map(
-                s => String(s.ciclo)
-            )
-        );
-
-
-    const publicos =
-        secciones.filter(
-            s =>
-                normalizarTexto(
-                    s.tipoAcceso
-                ) === "publico"
-        ).length;
-
-
-    const restringidos =
-        secciones.filter(
-            s =>
-                normalizarTexto(
-                    s.tipoAcceso
-                ) === "restringido"
-        ).length;
-
-
-    statRecursos.textContent =
-        secciones.length;
-
-    statCiclos.textContent =
-        ciclos.size;
-
-    statPublicos.textContent =
-        publicos;
-
-    statRestringidos.textContent =
-        restringidos;
-
-}
-
-
-/* =====================================================
-   SELECT DE CICLOS
-===================================================== */
-
-function generarFiltroCiclos() {
-
-    filtroCiclo.innerHTML = `
-        <option value="">
-            Todos los ciclos
-        </option>
-    `;
-
-
-    const ciclos =
-        [
-            ...new Set(
-                secciones
-                    .map(
-                        s =>
-                            String(
-                                s.ciclo
-                            ).trim()
-                    )
-                    .filter(Boolean)
-            )
-        ];
-
-
-    ciclos.sort(
-        (a, b) =>
-            Number(a) - Number(b)
-    );
-
-
-    ciclos.forEach(
-        ciclo => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                ciclo;
-
-            option.textContent =
-                `Ciclo ${convertirRomano(ciclo)}`;
-
-            filtroCiclo.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   TARJETAS DE CICLOS
-===================================================== */
-
-function generarTarjetasCiclos() {
-
-    listaCiclos.innerHTML =
-        "";
-
-
-    const conteo =
-        {};
-
-
-    secciones.forEach(
-        seccion => {
-
-            const ciclo =
-                String(
-                    seccion.ciclo
-                ).trim();
-
-            conteo[ciclo] =
-                (conteo[ciclo] || 0)
-                + 1;
-
-        }
-    );
-
-
-    Object
-        .keys(conteo)
-        .sort(
-            (a, b) =>
-                Number(a) - Number(b)
-        )
-        .forEach(
-            ciclo => {
-
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-
-                button.type =
-                    "button";
-
-
-                button.className =
-                    "cycle-card";
-
-
-                button.innerHTML = `
-
-                    <strong>
-                        Ciclo
-                    </strong>
-
-                    <span class="cycle-number">
-                        ${convertirRomano(ciclo)}
-                    </span>
-
-                    <span class="cycle-count">
-                        ${conteo[ciclo]}
-                        ${
-                            conteo[ciclo] === 1
-                            ?
-                            "recurso"
-                            :
-                            "recursos"
-                        }
-                    </span>
-
-                `;
-
-
-                button.addEventListener(
-                    "click",
-                    () =>
-                        seleccionarCiclo(
-                            ciclo
-                        )
-                );
-
-
-                listaCiclos.appendChild(
-                    button
-                );
-
-            }
-        );
-
-}
-
-
-/* =====================================================
-   SELECCIONAR CICLO
-===================================================== */
-
-function seleccionarCiclo(
-    ciclo
-) {
-
-    filtroCiclo.value =
-        String(ciclo);
-
-    buscador.value =
-        "";
-
-    filtroAcceso.value =
-        "";
-
-    aplicarFiltros();
-
-    mostrarTodos.classList.remove(
-        "hidden"
-    );
-
-
-    document
-        .getElementById(
-            "biblioteca"
-        )
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-/* =====================================================
-   FILTROS
-===================================================== */
-
-function aplicarFiltros() {
-
-    const texto =
-        normalizarTexto(
-            buscador.value
-        );
-
-
-    const ciclo =
-        String(
-            filtroCiclo.value
-        );
-
-
-    const acceso =
-        normalizarTexto(
-            filtroAcceso.value
-        );
-
-
-    const resultados =
-        secciones.filter(
-            seccion => {
-
-
-                const nombre =
-                    normalizarTexto(
-                        seccion.nombre
-                    );
-
-
-                const descripcion =
-                    normalizarTexto(
-                        seccion.descripcion
-                    );
-
-
-                const cicloSeccion =
-                    String(
-                        seccion.ciclo
-                    );
-
-
-                const accesoSeccion =
-                    normalizarTexto(
-                        seccion.tipoAcceso
-                    );
-
-
-                const coincideTexto =
-
-                    !texto
-                    ||
-                    nombre.includes(texto)
-                    ||
-                    descripcion.includes(texto);
-
-
-                const coincideCiclo =
-
-                    !ciclo
-                    ||
-                    cicloSeccion === ciclo;
-
-
-                const coincideAcceso =
-
-                    !acceso
-                    ||
-                    accesoSeccion === acceso;
-
-
-                return (
-
-                    coincideTexto
-                    &&
-                    coincideCiclo
-                    &&
-                    coincideAcceso
-
-                );
-
-            }
-        );
-
-
-    mostrarSecciones(
-        resultados
-    );
-
-
-    if (
-        ciclo
-        ||
-        texto
-        ||
-        acceso
-    ) {
-
-        mostrarTodos.classList.remove(
-            "hidden"
-        );
-
-    }
-
-    else {
-
-        mostrarTodos.classList.add(
-            "hidden"
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   MOSTRAR TARJETAS
-===================================================== */
-
-function mostrarSecciones(
-    lista
-) {
-
-    contenedor.innerHTML =
-        "";
-
-
-    contador.textContent =
-        lista.length === 1
-
-        ? "1 recurso encontrado"
-
-        : `${lista.length} recursos encontrados`;
-
-
-    if (
-        lista.length === 0
-    ) {
-
-        contenedor.innerHTML = `
-
-            <div class="empty-state">
-
-                <strong>
-                    No se encontraron recursos
-                </strong>
-
-                <p>
-                    Modifica los filtros
-                    o realiza otra búsqueda.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    lista.forEach(
-        seccion => {
-
-            contenedor.appendChild(
-                crearTarjeta(
-                    seccion
-                )
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   TARJETA
-===================================================== */
-
-function crearTarjeta(
-    seccion
-) {
-
-    const article =
-        document.createElement(
-            "article"
-        );
-
-
-    article.className =
-        "resource-card";
-
-
-    const tipo =
-        normalizarTexto(
-            seccion.tipoAcceso
-        );
-
-
-    const restringido =
-        tipo === "restringido";
-
-
-    const url =
-        validarUrl(
-            seccion.driveUrl
-        );
-
-
-    article.innerHTML = `
-
-        <span class="resource-cycle">
-
-            Ciclo
-            ${convertirRomano(
-                seccion.ciclo
-            )}
-
-        </span>
-
-
-        <h3>
-            ${escaparHTML(
-                seccion.nombre
-            )}
-        </h3>
-
-
-        <p class="resource-description">
-
-            ${
-                escaparHTML(
-                    seccion.descripcion
-                )
-                ||
-                "Material académico disponible para este curso."
-            }
-
-        </p>
-
-
-        <span
-            class="
-                access-badge
-                ${
-                    restringido
-                    ?
-                    "access-restricted"
-                    :
-                    "access-public"
-                }
-            "
-        >
-
-            ${
-                restringido
-                ?
-                "Acceso restringido"
-                :
-                "Acceso público"
-            }
-
-        </span>
-
-
-        <a
-            class="resource-button"
-            href="${url}"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-
-            ${
-                restringido
-                    ?
-                    "Abrir recurso"
-                    :
-                    "Abrir biblioteca"
-            }
-
-            <span aria-hidden="true">
-                ↗
-            </span>
-
-        </a>
-
-    `;
-
-
-    return article;
-
-}
-
-
-/* =====================================================
-   ESCAPAR TEXTO
-===================================================== */
+/* ======================================================
+   ESCAPAR HTML
+====================================================== */
 
 function escaparHTML(
     texto
@@ -913,11 +1020,12 @@ function escaparHTML(
 }
 
 
-/* =====================================================
-   VALIDAR URL
-===================================================== */
 
-function validarUrl(
+/* ======================================================
+   VALIDAR URL
+====================================================== */
+
+function validarURL(
     valor
 ) {
 
@@ -942,7 +1050,7 @@ function validarUrl(
     catch {
 
         console.warn(
-            "URL inválida:",
+            "URL incorrecta:",
             valor
         );
 
@@ -954,43 +1062,23 @@ function validarUrl(
 }
 
 
-/* =====================================================
-   ESTADOS
-===================================================== */
 
-function mostrarCarga() {
+/* ======================================================
+   ERROR
+====================================================== */
 
-    contenedor.innerHTML = `
+function mostrarError() {
 
-        <div class="loading-state">
+    coursesGrid.innerHTML = `
 
-            <div class="spinner"></div>
-
-            <p>
-                Cargando biblioteca...
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-function mostrarError(
-    mensaje
-) {
-
-    contenedor.innerHTML = `
-
-        <div class="error-state">
+        <div class="empty-state">
 
             <strong>
-                Error al cargar la biblioteca
+                No se pudo cargar el repositorio
             </strong>
 
             <p>
-                ${mensaje}
+                Revisa la conexión con Google Sheets.
             </p>
 
         </div>
@@ -998,105 +1086,3 @@ function mostrarError(
     `;
 
 }
-
-
-/* =====================================================
-   LIMPIAR FILTROS
-===================================================== */
-
-function restablecerFiltros() {
-
-    buscador.value =
-        "";
-
-    filtroCiclo.value =
-        "";
-
-    filtroAcceso.value =
-        "";
-
-    aplicarFiltros();
-
-}
-
-
-/* =====================================================
-   EVENTOS
-===================================================== */
-
-buscador.addEventListener(
-    "input",
-    aplicarFiltros
-);
-
-
-filtroCiclo.addEventListener(
-    "change",
-    aplicarFiltros
-);
-
-
-filtroAcceso.addEventListener(
-    "change",
-    aplicarFiltros
-);
-
-
-limpiarFiltros.addEventListener(
-    "click",
-    restablecerFiltros
-);
-
-
-mostrarTodos.addEventListener(
-    "click",
-    restablecerFiltros
-);
-
-
-/* =====================================================
-   MENÚ MÓVIL
-===================================================== */
-
-menuButton.addEventListener(
-    "click",
-    () => {
-
-        const abierto =
-            mainNav.classList.toggle(
-                "open"
-            );
-
-
-        menuButton.setAttribute(
-            "aria-expanded",
-            abierto
-        );
-
-    }
-);
-
-
-mainNav
-    .querySelectorAll("a")
-    .forEach(
-        enlace => {
-
-            enlace.addEventListener(
-                "click",
-                () => {
-
-                    mainNav.classList.remove(
-                        "open"
-                    );
-
-                    menuButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-
-                }
-            );
-
-        }
-    );
