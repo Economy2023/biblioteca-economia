@@ -1,1915 +1,809 @@
-/* ======================================================
-   IDENTIDAD
-====================================================== */
+/* =========================================================
+   REPOSITORIO ACADÉMICO — ESCUELA PROFESIONAL DE ECONOMÍA
+   ========================================================= */
 
 :root {
+    --azul-900: #0B2440;
+    --azul-800: #123A63;
+    --azul-600: #1F5A96;
+    --azul-100: #E8F0F9;
+    --amarillo: #F2B632;
+    --amarillo-100: #FFF5DA;
+    --madera: #8A5A33;
+    --madera-osc: #5E3B1F;
 
-    --blue: #0055B5;
-    --blue-dark: #003D82;
-    --blue-deep: #002B5C;
+    --texto: #1B2733;
+    --texto-suave: #5B6878;
+    --borde: #E2E8F0;
+    --fondo: #F7F9FC;
+    --blanco: #FFFFFF;
 
-    --yellow: #F2CB05;
-    --yellow-dark: #D3AD00;
+    --radio: 14px;
+    --sombra-s: 0 1px 2px rgba(16, 42, 67, .06), 0 2px 8px rgba(16, 42, 67, .06);
+    --sombra-m: 0 10px 30px rgba(16, 42, 67, .12);
 
-    --cream: #F1EBDD;
-    --paper: #F8F5ED;
+    /* Paleta de tejidos del Altiplano */
+    --andino-rojo: #B8312F;
+    --andino-magenta: #A62A62;
+    --andino-verde: #2E7D5B;
+    --andino-naranja: #D9642B;
 
-    --black: #151515;
-    --ink: #1C1C1C;
+    /* Faja tejida: franjas + rombos (se repite horizontalmente) */
+    --faja: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='16'%3E%3Crect width='28' height='16' fill='%23A62A62'/%3E%3Crect width='28' height='3' fill='%23F2B632'/%3E%3Crect y='13' width='28' height='3' fill='%232E7D5B'/%3E%3Cpath d='M0 8L7 4l7 4-7 4zM14 8l7-4 7 4-7 4z' fill='%23F2B632'/%3E%3Cpath d='M7 6.2L9.8 8 7 9.8 4.2 8zM21 6.2L23.8 8 21 9.8 18.2 8z' fill='%23123A63'/%3E%3Crect y='3' width='28' height='1' fill='%23B8312F'/%3E%3Crect y='12' width='28' height='1' fill='%23B8312F'/%3E%3C/svg%3E");
 
-    --white: #FFFFFF;
+    /* Chakana en contorno para fondos */
+    --chakana-fondo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23F2B632' stroke-opacity='.10' stroke-width='1.2'%3E%3Cpath d='M38 15h14v8h10v10h8v14h-8v10H52v8H38v-8H28V47h-8V33h8V23h10z'/%3E%3Ccircle cx='45' cy='40' r='5'/%3E%3C/g%3E%3Cg fill='%23FFFFFF' fill-opacity='.06'%3E%3Cpath d='M0 0l6 6-6 6zM90 0l-6 6 6 6zM0 78l6 6-6 6zM90 78l-6 6 6 6z'/%3E%3C/g%3E%3C/svg%3E");
 
-    --gray: #77736A;
-    --border: rgba(21,21,21,0.15);
+    /* Rombos pequeños para el lomo de los libros */
+    --rombos: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 4l3-3 3 3-3 3zM6 4l3-3 3 3-3 3z' fill='%23FFFFFF' fill-opacity='.55'/%3E%3C/svg%3E");
 
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --max: 1200px;
 }
 
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-/* ======================================================
-   RESET
-====================================================== */
-
-* {
-    box-sizing: border-box;
-}
-
-
-html {
-
-    scroll-behavior: smooth;
-
-}
-
+html { scroll-behavior: smooth; }
 
 body {
-
     margin: 0;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    background:
-        var(--paper);
-
-    color:
-        var(--black);
-
-    overflow-x:
-        hidden;
-
+    font-family: var(--sans);
+    color: var(--texto);
+    background: var(--fondo);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
+img { max-width: 100%; display: block; }
+a { color: inherit; }
 
-button,
-input {
-
-    font: inherit;
-
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 8px;
+    background: var(--amarillo);
+    color: var(--azul-900);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 100;
 }
+.skip-link:focus { left: 12px; }
 
-
-button {
-
-    cursor: pointer;
-
-}
-
-
-
-/* ======================================================
-   HEADER
-====================================================== */
-
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
 .site-header {
-
-    height: 76px;
-
-    padding:
-        0 34px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    background:
-        var(--paper);
-
-    border-bottom:
-        1px solid var(--black);
-
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, .85);
+    backdrop-filter: saturate(160%) blur(12px);
+    -webkit-backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid var(--borde);
 }
 
+.header-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
 
-   .brand {
-   
-       display:
-           flex;
-   
-       align-items:
-           center;
-   
-       gap:
-           12px;
-   
-       color:
-           inherit;
-   
-       text-decoration:
-           none;
-   
-   }
-
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+}
 
 .brand-mark {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--azul-100);
+    box-shadow: 0 0 0 2px var(--amarillo);
+    flex-shrink: 0;
+}
+.brand-mark img { width: 100%; height: 100%; object-fit: cover; }
 
+.brand-copy { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-copy strong { font-size: .98rem; color: var(--azul-800); }
+.brand-copy span { font-size: .78rem; color: var(--texto-suave); }
+
+.main-nav { display: flex; gap: 4px; }
+.main-nav a {
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--texto-suave);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background .2s, color .2s;
+}
+.main-nav a:hover { background: var(--azul-100); color: var(--azul-800); }
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--azul-900);
+    background: var(--amarillo-100);
+    border: 1px solid #F5D98A;
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.header-badge svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.library-hero {
+    position: relative;
+    background:
+        radial-gradient(circle at 85% 15%, rgba(242, 182, 50, .18), transparent 40%),
+        radial-gradient(circle at 10% 90%, rgba(31, 90, 150, .5), transparent 45%),
+        linear-gradient(135deg, var(--azul-900), var(--azul-800));
+    color: var(--blanco);
+    overflow: hidden;
+}
+
+.library-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--chakana-fondo);
+    background-size: 90px 90px;
+    pointer-events: none;
+}
+
+/* Cordillera y cerros del Altiplano */
+.hero-mountains {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 130px;
+    display: block;
+    pointer-events: none;
+}
+.hero-mountains .far  { fill: rgba(255, 255, 255, .07); }
+.hero-mountains .snow { fill: rgba(255, 255, 255, .35); }
+.hero-mountains .mid  { fill: rgba(11, 36, 64, .55); }
+.hero-mountains .near { fill: var(--fondo); }
+
+.hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 72px 24px 150px;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--amarillo);
+    background: rgba(242, 182, 50, .12);
+    border: 1px solid rgba(242, 182, 50, .35);
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+.eyebrow .chakana {
+    width: 14px;
+    height: 14px;
+    fill: var(--amarillo);
+}
+
+/* Faja tejida */
+.textile-band {
+    height: 12px;
+    background-image: var(--faja);
+    background-size: 21px 12px;
+    background-repeat: repeat-x;
+}
+
+.hero-copy h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.05;
+    margin: 20px 0 16px;
+    letter-spacing: -.01em;
+}
+.hero-copy h1 span { display: block; color: var(--amarillo); }
+
+.hero-description {
+    font-size: 1.08rem;
+    color: rgba(255, 255, 255, .85);
+    max-width: 460px;
+    margin: 0 0 12px;
+}
+.hero-description strong { color: var(--blanco); }
+
+.hero-resolution {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .8rem;
+    color: rgba(255, 255, 255, .65);
+    margin: 0 0 28px;
+}
+.hero-resolution svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+/* Buscador */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 460px;
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 4px 6px 4px 16px;
+    box-shadow: var(--sombra-m);
+    border: 2px solid transparent;
+    transition: border-color .2s, box-shadow .2s;
+}
+.search-box:focus-within {
+    border-color: var(--amarillo);
+    box-shadow: 0 0 0 5px rgba(242, 182, 50, .25), var(--sombra-m);
+}
+.search-box svg { width: 20px; height: 20px; fill: var(--texto-suave); flex-shrink: 0; }
+.search-box input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--texto);
+    padding: 12px 4px;
+    min-width: 0;
+}
+
+/* Indicadores */
+.hero-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+.stat {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 12px;
+    padding: 12px 18px;
+    min-width: 110px;
+}
+.stat strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--blanco);
+}
+.stat span {
+    font-size: .8rem;
+    color: rgba(255, 255, 255, .7);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+/* =========================================================
+   ESTANTERÍA
+   ========================================================= */
+.books-area {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04));
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 20px;
+    padding: 22px 22px 18px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .25);
+}
+
+.books-area-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .75);
+    margin-bottom: 18px;
+}
+.pill {
+    background: var(--amarillo);
+    color: var(--azul-900);
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: .05em;
+}
+
+.shelf-wrapper { position: relative; }
+
+.bookshelf {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 270px;
+    padding: 0 14px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Libros generados por JavaScript (sin depender de su clase) */
+#semesterBooks > * {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 82%;
+    border: 0;
+    margin: 0;
+    padding: 26px 4px;
+    border-radius: 4px 6px 2px 2px;
+    color: var(--blanco);
+    font-family: var(--sans);
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow:
+        inset 3px 0 0 rgba(255, 255, 255, .18),
+        inset -4px 0 0 rgba(0, 0, 0, .18),
+        0 6px 12px rgba(0, 0, 0, .3);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    background-image: linear-gradient(90deg, rgba(0,0,0,.12), rgba(255,255,255,.08) 30%, rgba(0,0,0,.1));
+}
+
+/* Colores y alturas de respaldo (si el JS no los define) */
+#semesterBooks > *:nth-child(10n+1)  { background-color: #1F5A96; height: 80%; }
+#semesterBooks > *:nth-child(10n+2)  { background-color: #B8312F; height: 90%; }
+#semesterBooks > *:nth-child(10n+3)  { background-color: #2E7D5B; height: 76%; }
+#semesterBooks > *:nth-child(10n+4)  { background-color: #C8962A; height: 94%; }
+#semesterBooks > *:nth-child(10n+5)  { background-color: #A62A62; height: 84%; }
+#semesterBooks > *:nth-child(10n+6)  { background-color: #123A63; height: 88%; }
+#semesterBooks > *:nth-child(10n+7)  { background-color: #D9642B; height: 78%; }
+#semesterBooks > *:nth-child(10n+8)  { background-color: #245F4A; height: 92%; }
+#semesterBooks > *:nth-child(10n+9)  { background-color: #0B2440; height: 82%; }
+#semesterBooks > *:nth-child(10n+10) { background-color: #7B2A4F; height: 90%; }
+
+/* Franjas decorativas en el lomo */
+/* Bandas tejidas con rombos en el lomo */
+#semesterBooks > *::before,
+#semesterBooks > *::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background-image: var(--rombos);
+    background-size: 9px 6px;
+    background-repeat: repeat-x;
+    background-position: center;
+    border-top: 2px solid rgba(242, 182, 50, .7);
+    border-bottom: 2px solid rgba(242, 182, 50, .7);
+    pointer-events: none;
+}
+#semesterBooks > *::before { top: 8px; }
+#semesterBooks > *::after  { bottom: 8px; }
+
+#semesterBooks > *:hover {
+    transform: translateY(-12px);
+    filter: brightness(1.08);
+    box-shadow:
+        inset 3px 0 0 rgba(255, 255, 255, .18),
+        inset -4px 0 0 rgba(0, 0, 0, .18),
+        0 18px 24px rgba(0, 0, 0, .35);
+}
+
+#semesterBooks > *:focus-visible {
+    outline: 3px solid var(--amarillo);
+    outline-offset: 3px;
+}
+
+/* Estado seleccionado (cubre los nombres de clase más comunes) */
+#semesterBooks > .active,
+#semesterBooks > .is-active,
+#semesterBooks > .selected,
+#semesterBooks > [aria-pressed="true"],
+#semesterBooks > [aria-selected="true"] {
+    transform: translateY(-20px);
+    box-shadow:
+        0 0 0 3px var(--amarillo),
+        0 22px 30px rgba(0, 0, 0, .4);
+}
+
+/* Estante de madera */
+.shelf {
+    position: relative;
+    z-index: 3;
+    height: 18px;
+    border-radius: 4px;
+    background:
+        linear-gradient(180deg, #A9744A 0%, var(--madera) 45%, var(--madera-osc) 100%);
+    box-shadow: 0 2px 0 rgba(255, 255, 255, .15) inset;
+}
+.shelf-shadow {
+    height: 18px;
+    margin: 0 10px;
+    background: radial-gradient(ellipse at top, rgba(0, 0, 0, .45), transparent 70%);
+}
+
+.books-instruction {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: .9rem;
+    color: rgba(255, 255, 255, .8);
+}
+.books-instruction .arrow { animation: rebote 1.6s infinite; }
+.pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amarillo);
+    box-shadow: 0 0 0 0 rgba(242, 182, 50, .6);
+    animation: pulso 1.8s infinite;
+}
 
+@keyframes rebote {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+}
+@keyframes pulso {
+    0% { box-shadow: 0 0 0 0 rgba(242, 182, 50, .6); }
+    70% { box-shadow: 0 0 0 10px rgba(242, 182, 50, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(242, 182, 50, 0); }
+}
+
+/* =========================================================
+   CÓMO USAR
+   ========================================================= */
+.steps-section {
+    position: relative;
+    z-index: 5;
+    margin-top: -36px;
+    padding: 0 24px;
+}
+.steps-grid {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--faja) top left / 21px 12px repeat-x, var(--blanco);
+    padding-top: 12px;
+    border-radius: 18px;
+    box-shadow: var(--sombra-m);
+    border: 1px solid var(--borde);
+    overflow: hidden;
+}
+.step {
+    display: flex;
+    gap: 14px;
+    padding: 22px 24px;
+    align-items: flex-start;
+}
+.step + .step { border-left: 1px solid var(--borde); }
+.step-num {
     flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: var(--azul-900);
+    background: var(--amarillo);
+    /* Forma de chakana (cruz andina escalonada) */
+    clip-path: polygon(36.7% 0, 63.3% 0, 63.3% 16.7%, 83.3% 16.7%, 83.3% 36.7%, 100% 36.7%,
+        100% 63.3%, 83.3% 63.3%, 83.3% 83.3%, 63.3% 83.3%, 63.3% 100%, 36.7% 100%,
+        36.7% 83.3%, 16.7% 83.3%, 16.7% 63.3%, 0 63.3%, 0 36.7%, 16.7% 36.7%,
+        16.7% 16.7%, 36.7% 16.7%);
 }
-
-.brand-mark img {
-    max-width: 44px;
-    max-height: 44px;
-
-    width: auto;
-    height: auto;
-
-    object-fit: contain;
+.step:nth-child(2) .step-num { background: var(--andino-rojo); color: var(--blanco); }
+.step:nth-child(3) .step-num { background: var(--andino-verde); color: var(--blanco); }
+.step h3 {
+    margin: 0 0 2px;
+    font-size: 1rem;
+    color: var(--azul-800);
 }
+.step p { margin: 0; font-size: .88rem; color: var(--texto-suave); }
 
+/* =========================================================
+   CURSOS
+   ========================================================= */
+.courses-section { padding: 72px 24px 80px; scroll-margin-top: 70px; }
 
-.brand-copy {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    line-height:
-        1.2;
-
-}
-
-
-.brand-copy strong {
-
-    font-size:
-        0.86rem;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-.brand-copy span {
-
-    margin-top:
-        3px;
-
-    color:
-        var(--gray);
-
-    font-size:
-        0.72rem;
-
-}
-
-
-.header-right {
-
-    font-size:
-        0.75rem;
-
-    font-weight:
-        700;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.08em;
-
-}
-
-
-
-/* ======================================================
-   HERO
-====================================================== */
-
-.library-hero {
-
-    min-height:
-        calc(100vh - 76px);
-
-    display:
-        grid;
-
-    grid-template-columns:
-        42% 58%;
-
-    border-bottom:
-        1px solid var(--black);
-
-}
-
-
-
-/* ======================================================
-   HERO IZQUIERDO
-====================================================== */
-
-.hero-copy {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    background:
-        var(--paper);
-
-    border-right:
-        1px solid var(--black);
-
-}
-
-
-.hero-copy-inner {
-
-    width:
-        100%;
-
-    padding:
-        60px 7vw 60px 6vw;
-
-}
-
-
-.eyebrow {
-
-    display:
-        inline-block;
-
-    margin-bottom:
-        24px;
-
-    color:
-        var(--blue);
-
-    font-size:
-        0.72rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.13em;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-.hero-copy h1 {
-
-    margin:
-        0;
-
-    max-width:
-        600px;
-
-    font-size:
-        clamp(
-            3.4rem,
-            5.8vw,
-            6.8rem
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        -0.065em;
-
-    line-height:
-        0.9;
-
-}
-
-
-.hero-copy h1 span {
-
-    display:
-        block;
-
-    color:
-        var(--blue);
-
-}
-
-
-.hero-description {
-
-    max-width:
-        520px;
-
-    margin:
-        32px 0 0;
-
-    font-size:
-        1rem;
-
-    line-height:
-        1.65;
-
-}
-
-
-/* ======================================================
-   SEARCH
-====================================================== */
-
-.search-box {
-
-    position:
-        relative;
-
-    max-width:
-        520px;
-
-    margin-top:
-        36px;
-
-}
-
-
-.search-box svg {
-
-    position:
-        absolute;
-
-    top:
-        50%;
-
-    left:
-        17px;
-
-    width:
-        21px;
-
-    height:
-        21px;
-
-    transform:
-        translateY(-50%);
-
-    fill:
-        var(--black);
-
-}
-
-
-#buscador {
-
-    width:
-        100%;
-
-    min-height:
-        54px;
-
-    padding:
-        0 18px 0 50px;
-
-    border:
-        1px solid var(--black);
-
-    border-radius:
-        0;
-
-    outline:
-        none;
-
-    background:
-        transparent;
-
-    color:
-        var(--black);
-
-    transition:
-        background 0.2s,
-        box-shadow 0.2s;
-
-}
-
-
-#buscador:focus {
-
-    background:
-        var(--white);
-
-    box-shadow:
-        7px 7px 0 var(--yellow);
-
-}
-
-
-#buscador::placeholder {
-
-    color:
-        #777;
-
-}
-
-
-/* ======================================================
-   STATS
-====================================================== */
-
-.hero-stats {
-
-    display:
-        flex;
-
-    gap:
-        50px;
-
-    margin-top:
-        35px;
-
-}
-
-
-.hero-stats div {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-}
-
-
-.hero-stats strong {
-
-    color:
-        var(--blue);
-
-    font-size:
-        1.9rem;
-
-}
-
-
-.hero-stats span {
-
-    margin-top:
-        1px;
-
-    color:
-        var(--gray);
-
-    font-size:
-        0.7rem;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.08em;
-
-}
-
-
-/* ======================================================
-   HELP
-====================================================== */
-
-.hero-help {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        15px;
-
-    margin-top:
-        40px;
-
-}
-
-
-.help-line {
-
-    width:
-        38px;
-
-    height:
-        2px;
-
-    background:
-        var(--yellow);
-
-}
-
-
-.hero-help p {
-
-    margin:
-        0;
-
-    color:
-        var(--gray);
-
-    font-size:
-        0.75rem;
-
-}
-
-
-
-/* ======================================================
-   BOOK AREA
-====================================================== */
-
-.books-area {
-
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    justify-content:
-        center;
-
-    min-width:
-        0;
-
-    padding:
-        35px 30px 30px;
-
-    background:
-        var(--cream);
-
-}
-
-
-.books-area-header {
-
-    position:
-        absolute;
-
-    top:
-        24px;
-
-    left:
-        30px;
-
-    right:
-        30px;
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    color:
-        rgba(0,0,0,0.55);
-
-    font-size:
-        0.68rem;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.1em;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-
-/* ======================================================
-   BOOKSHELF
-====================================================== */
-
-.shelf-wrapper {
-
-    position:
-        relative;
-
-    width:
-        100%;
-
-    margin-top:
-        50px;
-
-    padding-top:
-        45px;
-
-}
-
-
-.bookshelf {
-
-    position:
-        relative;
-
-    z-index:
-        4;
-
-    height:
-        min(61vh, 590px);
-
-    display:
-        flex;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        center;
-
-    gap:
-        clamp(3px, 0.5vw, 8px);
-
-}
-
-
-/* ======================================================
-   BOOK
-====================================================== */
-
-.semester-book {
-
-    position:
-        relative;
-
-    flex:
-        1 1 0;
-
-    max-width:
-        85px;
-
-    min-width:
-        42px;
-
-    height:
-        var(--book-height);
-
-    padding:
-        17px 8px;
-
-    border:
-        1px solid rgba(0,0,0,0.65);
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    color:
-        var(--book-text);
-
-    background:
-        var(--book-color);
-
-    box-shadow:
-        inset -7px 0 0
-        rgba(0,0,0,0.08);
-
-    transition:
-        transform 0.28s cubic-bezier(.2,.8,.2,1),
-        box-shadow 0.28s ease;
-
-}
-
-
-/* pequeño borde tipo encuadernación */
-
-.semester-book::before {
-
-    content: "";
-
-    position:
-        absolute;
-
-    top:
-        10px;
-
-    bottom:
-        10px;
-
-    left:
-        7px;
-
-    width:
-        2px;
-
-    background:
-        currentColor;
-
-    opacity:
-        0.2;
-
-}
-
-
-.semester-book:hover {
-
-    transform:
-        translateY(-18px);
-
-    box-shadow:
-        9px 13px 0
-        rgba(0,0,0,0.12);
-
-}
-
-
-.semester-book.active {
-
-    transform:
-        translateY(-34px);
-
-    box-shadow:
-        10px 15px 0
-        rgba(0,0,0,0.17);
-
-}
-
-
-.book-title {
-
-    writing-mode:
-        vertical-rl;
-
-    transform:
-        rotate(180deg);
-
-    white-space:
-        nowrap;
-
-    font-size:
-        clamp(
-            0.63rem,
-            0.8vw,
-            0.84rem
-        );
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.08em;
-
-    text-transform:
-        uppercase;
-
-}
-
-
-.book-count {
-
-    position:
-        absolute;
-
-    bottom:
-        13px;
-
-    right:
-        8px;
-
-    font-size:
-        0.62rem;
-
-    font-weight:
-        800;
-
-    writing-mode:
-        vertical-rl;
-
-}
-
-
-/* ======================================================
-   COLORES DE LIBROS
-====================================================== */
-
-.semester-book:nth-child(1),
-.semester-book:nth-child(5),
-.semester-book:nth-child(9) {
-
-    --book-color:
-        #0055B5;
-
-    --book-text:
-        #FFFFFF;
-
-}
-
-
-.semester-book:nth-child(2),
-.semester-book:nth-child(6),
-.semester-book:nth-child(10) {
-
-    --book-color:
-        #F2CB05;
-
-    --book-text:
-        #151515;
-
-}
-
-
-.semester-book:nth-child(3),
-.semester-book:nth-child(7) {
-
-    --book-color:
-        #151515;
-
-    --book-text:
-        #FFFFFF;
-
-}
-
-
-.semester-book:nth-child(4),
-.semester-book:nth-child(8) {
-
-    --book-color:
-        #FFFFFF;
-
-    --book-text:
-        #0055B5;
-
-}
-
-
-
-/* ======================================================
-   ESTANTE
-====================================================== */
-
-.shelf {
-
-    position:
-        relative;
-
-    z-index:
-        6;
-
-    height:
-        25px;
-
-    margin:
-        0 -15px;
-
-    background:
-        var(--blue-deep);
-
-    border:
-        1px solid var(--black);
-
-}
-
-
-.shelf::after {
-
-    content: "";
-
-    position:
-        absolute;
-
-    left:
-        0;
-
-    right:
-        0;
-
-    bottom:
-        -8px;
-
-    height:
-        8px;
-
-    background:
-        #001D3D;
-
-}
-
-
-.shelf-shadow {
-
-    height:
-        20px;
-
-    margin:
-        8px 2% 0;
-
-    background:
-        rgba(0,0,0,0.12);
-
-    filter:
-        blur(14px);
-
-}
-
-
-.books-instruction {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    margin-top:
-        14px;
-
-    padding:
-        0 5px;
-
-    color:
-        var(--gray);
-
-    font-size:
-        0.69rem;
-
-    font-weight:
-        700;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.08em;
-
-}
-
-
-
-/* ======================================================
-   COURSES
-====================================================== */
-
-.courses-section {
-
-    min-height:
-        650px;
-
-    padding:
-        85px 6vw 100px;
-
-    background:
-        var(--blue);
-
-    color:
-        var(--white);
-
-}
-
-
-.courses-container {
-
-    max-width:
-        1450px;
-
-    margin:
-        0 auto;
-
-}
-
+.courses-container { max-width: var(--max); margin: 0 auto; }
 
 .courses-heading {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr auto;
-
-    gap:
-        40px;
-
-    align-items:
-        end;
-
-    padding-bottom:
-        35px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,0.35);
-
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--borde);
 }
-
 
 .courses-eyebrow {
-
-    display:
-        block;
-
-    margin-bottom:
-        8px;
-
-    color:
-        var(--yellow);
-
-    font-size:
-        0.7rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.12em;
-
-    text-transform:
-        uppercase;
-
+    display: inline-block;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--azul-600);
+    margin-bottom: 6px;
 }
-
+.courses-eyebrow::before,
+.information-title span::before {
+    content: "";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin-right: 8px;
+    background: var(--andino-rojo);
+    transform: rotate(45deg) translateY(-1px);
+    box-shadow: 0 0 0 2px var(--amarillo-100), 0 0 0 3px var(--amarillo);
+}
 
 .courses-heading h2 {
-
-    margin:
-        0;
-
-    font-size:
-        clamp(
-            2.5rem,
-            5vw,
-            5.2rem
-        );
-
-    line-height:
-        0.95;
-
-    letter-spacing:
-        -0.05em;
-
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    line-height: 1.1;
+    margin: 0 0 8px;
+    color: var(--azul-900);
 }
-
-
-.courses-heading p {
-
-    max-width:
-        600px;
-
-    margin:
-        15px 0 0;
-
-    color:
-        rgba(255,255,255,0.75);
-
-}
-
+.courses-heading p { margin: 0; color: var(--texto-suave); max-width: 560px; }
 
 .semester-big-number {
-
-    color:
-        var(--yellow);
-
-    font-size:
-        clamp(
-            5rem,
-            10vw,
-            9rem
-        );
-
-    font-weight:
-        900;
-
-    line-height:
-        0.75;
-
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(4rem, 9vw, 7rem);
+    line-height: .85;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--amarillo);
+    user-select: none;
 }
-
-
-
-/* ======================================================
-   COURSE GRID
-====================================================== */
 
 .courses-grid {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    margin-top:
-        45px;
-
-    border-top:
-        1px solid
-        rgba(255,255,255,0.28);
-
-    border-left:
-        1px solid
-        rgba(255,255,255,0.28);
-
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
 }
 
+/* Tarjetas de curso generadas por JavaScript */
+.courses-grid > *:not(.initial-state) {
+    position: relative;
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 22px 20px 20px;
+    box-shadow: var(--sombra-s);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    overflow: hidden;
+    animation: aparecer .35s ease both;
+}
+.courses-grid > *:not(.initial-state)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    /* Franjas de colores como en un aguayo */
+    background: linear-gradient(180deg,
+        var(--azul-600) 0 25%,
+        var(--andino-rojo) 25% 50%,
+        var(--amarillo) 50% 75%,
+        var(--andino-verde) 75% 100%);
+}
+.courses-grid > *:not(.initial-state):hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-m);
+    border-color: #C9D7E8;
+}
+.courses-grid > * h3,
+.courses-grid > * h4 {
+    font-size: 1.05rem;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    color: var(--azul-900);
+}
+.courses-grid > * p { font-size: .9rem; color: var(--texto-suave); margin: 0 0 12px; }
+.courses-grid > * a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--azul-600);
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--azul-100);
+    transition: background .2s, color .2s;
+}
+.courses-grid > * a:hover { background: var(--azul-800); color: var(--blanco); }
 
-.course-card {
+.courses-grid > *:nth-child(2) { animation-delay: .04s; }
+.courses-grid > *:nth-child(3) { animation-delay: .08s; }
+.courses-grid > *:nth-child(4) { animation-delay: .12s; }
+.courses-grid > *:nth-child(5) { animation-delay: .16s; }
+.courses-grid > *:nth-child(6) { animation-delay: .20s; }
 
-    position:
-        relative;
-
-    min-height:
-        270px;
-
-    padding:
-        28px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    border-right:
-        1px solid
-        rgba(255,255,255,0.28);
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,0.28);
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-
-.course-card:hover {
-
-    background:
-        var(--yellow);
-
-    color:
-        var(--black);
-
+/* Estado inicial */
+.initial-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 56px 24px;
+    border: 2px dashed #CBD5E1;
+    border-radius: 18px;
+    background: var(--blanco);
 }
-
-
-.course-number {
-
-    margin-bottom:
-        38px;
-
-    color:
-        var(--yellow);
-
-    font-size:
-        0.7rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.1em;
-
+.initial-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--amarillo-100);
 }
-
-
-.course-card:hover
-.course-number {
-
-    color:
-        var(--blue);
-
-}
-
-
-.course-card h3 {
-
-    margin:
-        0;
-
-    font-size:
-        1.35rem;
-
-    line-height:
-        1.2;
-
-}
-
-
-.course-card p {
-
-    flex-grow:
-        1;
-
-    margin:
-        12px 0 25px;
-
-    color:
-        rgba(255,255,255,0.7);
-
-    font-size:
-        0.86rem;
-
-    line-height:
-        1.55;
-
-}
-
-
-.course-card:hover p {
-
-    color:
-        rgba(0,0,0,0.7);
-
-}
-
-
-
-/* ======================================================
-   ACCESS
-====================================================== */
-
-.course-meta {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        10px;
-
-}
-
-
-.access {
-
-    font-size:
-        0.67rem;
-
-    font-weight:
-        800;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.07em;
-
-}
-
-
-.course-link {
-
-    width:
-        42px;
-
-    height:
-        42px;
-
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    border:
-        1px solid
-        rgba(255,255,255,0.65);
-
-    color:
-        var(--white);
-
-    text-decoration:
-        none;
-
-    font-size:
-        1.3rem;
-
-    transition:
-        transform 0.2s;
-
-}
-
-
-.course-card:hover
-.course-link {
-
-    border-color:
-        var(--black);
-
-    color:
-        var(--black);
-
-}
-
-
-.course-link:hover {
-
-    transform:
-        translate(3px,-3px);
-
-}
-
-
-
-/* ======================================================
-   INITIAL / EMPTY
-====================================================== */
-
-.initial-state,
-.empty-state {
-
-    grid-column:
-        1 / -1;
-
-    min-height:
-        300px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-    text-align:
-        center;
-
-    border-right:
-        1px solid
-        rgba(255,255,255,0.28);
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,0.28);
-
-}
-
-
+.initial-icon svg { width: 30px; height: 30px; fill: var(--madera); }
 .initial-state span {
-
-    color:
-        var(--yellow);
-
-    font-size:
-        2rem;
-
-    font-weight:
-        900;
-
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--azul-800);
 }
+.initial-state p { margin: 6px 0 0; color: var(--texto-suave); }
 
-
-.initial-state p,
-.empty-state p {
-
-    max-width:
-        390px;
-
-    color:
-        rgba(255,255,255,0.7);
-
-}
-
-
-
-/* ======================================================
-   INFORMATION
-====================================================== */
-
+/* =========================================================
+   INFORMACIÓN
+   ========================================================= */
 .information-section {
-
-    padding:
-        90px 6vw;
-
-    background:
-        var(--paper);
-
+    background: var(--faja) top left / 21px 12px repeat-x, var(--blanco);
+    padding: 84px 24px 72px;
+    scroll-margin-top: 70px;
 }
-
-
 .information-grid {
-
-    max-width:
-        1450px;
-
-    margin:
-        auto;
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1.25fr 1fr 0.7fr;
-
-    gap:
-        60px;
-
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr .9fr;
+    gap: 40px;
+    align-items: start;
 }
-
-
 .information-title span {
-
-    color:
-        var(--blue);
-
-    font-size:
-        0.7rem;
-
-    font-weight:
-        800;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.1em;
-
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--azul-600);
 }
-
-
 .information-title h2 {
-
-    margin:
-        12px 0 0;
-
-    font-size:
-        clamp(
-            2rem,
-            4vw,
-            4rem
-        );
-
-    line-height:
-        0.95;
-
-    letter-spacing:
-        -0.04em;
-
+    font-family: var(--serif);
+    font-size: 2rem;
+    line-height: 1.15;
+    margin: 8px 0 0;
+    color: var(--azul-900);
 }
+.information-text p { margin: 0 0 14px; color: var(--texto-suave); }
 
-
-.information-text {
-
-    color:
-        #4E4A42;
-
-    line-height:
-        1.7;
-
-}
-
-
-.information-colors {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    min-height:
-        200px;
-
-}
-
-
+.information-colors { display: grid; gap: 12px; }
 .color-block {
-
-    padding:
-        18px;
-
-    display:
-        flex;
-
-    align-items:
-        flex-end;
-
-    font-size:
-        0.68rem;
-
-    font-weight:
-        800;
-
-    text-transform:
-        uppercase;
-
-    writing-mode:
-        vertical-rl;
-
+    border-radius: var(--radio);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
 }
-
-
-.color-block.blue {
-
+.color-block strong { font-family: var(--serif); font-size: 1.3rem; }
+.color-block span { font-size: .85rem; opacity: .85; }
+.color-block.blue { background: var(--azul-800); color: var(--blanco); }
+.color-block.yellow { background: var(--amarillo); color: var(--azul-900); }
+.color-block.red {
     background:
-        var(--blue);
-
-    color:
-        var(--white);
-
+        var(--faja) bottom left / 21px 12px repeat-x,
+        var(--andino-rojo);
+    color: var(--blanco);
+    padding-bottom: 30px;
 }
 
-
-.color-block.yellow {
-
-    background:
-        var(--yellow);
-
-    color:
-        var(--black);
-
-}
-
-
-
-/* ======================================================
+/* =========================================================
    FOOTER
-====================================================== */
-
+   ========================================================= */
 .site-footer {
-
-    min-height:
-        130px;
-
-    padding:
-        30px 6vw;
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    background:
-        var(--black);
-
-    color:
-        var(--white);
-
-    border-top:
-        7px solid var(--yellow);
-
+    background: var(--azul-900);
+    color: rgba(255, 255, 255, .75);
+    font-size: .88rem;
+}
+.footer-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 28px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.footer-inner strong { display: block; color: var(--blanco); font-size: 1rem; }
+.footer-inner > div:first-child > span { display: block; }
+.footer-city { color: var(--amarillo); font-size: .82rem; margin-top: 2px; }
+.site-footer {
+    background-image: var(--chakana-fondo);
+    background-size: 90px 90px;
+}
+.footer-right { display: flex; gap: 16px; }
+.footer-right span + span {
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, .25);
 }
 
-
-.site-footer div {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-}
-
-
-.site-footer strong {
-
-    font-size:
-        0.85rem;
-
-}
-
-
-.site-footer span {
-
-    margin-top:
-        4px;
-
-    color:
-        rgba(255,255,255,0.6);
-
-    font-size:
-        0.7rem;
-
-}
-
-
-
-/* ======================================================
+/* =========================================================
    RESPONSIVE
-====================================================== */
-
-@media
-(max-width: 1050px) {
-
-    .library-hero {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .hero-copy {
-
-        min-height:
-            620px;
-
-        border-right:
-            none;
-
-        border-bottom:
-            1px solid var(--black);
-
-    }
-
-
-    .books-area {
-
-        min-height:
-            660px;
-
-    }
-
-
-    .bookshelf {
-
-        height:
-            500px;
-
-    }
-
-
-    .courses-grid {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-    }
-
-
-    .information-grid {
-
-        grid-template-columns:
-            1fr 1fr;
-
-    }
-
-
-    .information-colors {
-
-        grid-column:
-            1 / -1;
-
-        min-height:
-            120px;
-
-    }
-
+   ========================================================= */
+@media (max-width: 980px) {
+    .main-nav { display: none; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px 110px; }
+    .hero-mountains { height: 90px; }
+    .information-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
+@media (max-width: 720px) {
+    .header-inner { padding: 10px 16px; }
+    .header-badge { display: none; }
+    .brand-copy strong { font-size: .9rem; }
 
+    .steps-section { padding: 0 16px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .step + .step { border-left: 0; border-top: 1px solid var(--borde); }
 
-@media
-(max-width: 700px) {
+    .books-area { padding: 18px 12px 14px; }
+    .bookshelf { height: 220px; gap: 5px; padding: 0 8px; }
+    #semesterBooks > * { font-size: .78rem; }
 
-    .site-header {
+    .courses-section { padding: 56px 16px 64px; }
+    .courses-heading { align-items: flex-start; }
+    .semester-big-number { font-size: 4rem; }
 
-        height:
-            68px;
+    .information-section { padding: 56px 16px; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+}
 
-        padding:
-            0 18px;
-
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
     }
-
-
-    .header-right {
-
-        display:
-            none;
-
-    }
-
-
-    .brand-copy strong {
-
-        font-size:
-            0.72rem;
-
-    }
-
-
-    .hero-copy-inner {
-
-        padding:
-            60px 24px;
-
-    }
-
-
-    .hero-copy h1 {
-
-        font-size:
-            clamp(
-                3.4rem,
-                17vw,
-                5.4rem
-            );
-
-    }
-
-
-    .hero-stats {
-
-        gap:
-            30px;
-
-    }
-
-
-    .books-area {
-
-        min-height:
-            590px;
-
-        padding:
-            30px 14px;
-
-    }
-
-
-    .shelf-wrapper {
-
-        overflow-x:
-            auto;
-
-        overflow-y:
-            visible;
-
-        padding-top:
-            60px;
-
-        scrollbar-width:
-            thin;
-
-    }
-
-
-    .bookshelf {
-
-        min-width:
-            720px;
-
-        height:
-            420px;
-
-        justify-content:
-            flex-start;
-
-    }
-
-
-    .semester-book {
-
-        flex:
-            0 0 60px;
-
-        min-width:
-            60px;
-
-    }
-
-
-    .shelf {
-
-        min-width:
-            720px;
-
-    }
-
-
-    .courses-section {
-
-        padding:
-            65px 20px 80px;
-
-    }
-
-
-    .courses-heading {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .semester-big-number {
-
-        display:
-            none;
-
-    }
-
-
-    .courses-grid {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .course-card {
-
-        min-height:
-            240px;
-
-    }
-
-
-    .information-section {
-
-        padding:
-            65px 24px;
-
-    }
-
-
-    .information-grid {
-
-        grid-template-columns:
-            1fr;
-
-        gap:
-            35px;
-
-    }
-
-
-    .information-colors {
-
-        grid-column:
-            auto;
-
-    }
-
-
-    .site-footer {
-
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
-
-        gap:
-            20px;
-
-    }
-
 }
