@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Repositorio Académico de la Escuela Profesional de Economía - Universidad Nacional de Juliaca">
-    <meta name="theme-color" content="#123A63">
+    <meta name="theme-color" content="#0B2F6B">
 
     <title>Escuela Profesional de Economía | Repositorio Académico</title>
 
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles.css">
 
@@ -29,6 +29,14 @@
          ENCABEZADO
     =========================================== -->
     <header class="site-header">
+
+        <div class="header-top">
+            <div class="header-top-inner">
+                <span><strong>Universidad Nacional de Juliaca</strong><span class="hide-sm"> · Escuela Profesional de Economía</span></span>
+                <span>Juliaca · San Román · Puno</span>
+            </div>
+        </div>
+
         <div class="header-inner">
 
             <a href="#inicio" class="brand">
@@ -37,14 +45,15 @@
                 </div>
                 <div class="brand-copy">
                     <strong>Escuela Profesional de Economía</strong>
-                    <span>Universidad Nacional de Juliaca</span>
+                    <span>Repositorio Académico</span>
                 </div>
             </a>
 
-            <nav class="main-nav" aria-label="Navegación principal">
+            <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
                 <a href="#inicio">Inicio</a>
                 <a href="#como-usar">Cómo usar</a>
                 <a href="#cursos">Cursos</a>
+                <a href="#aporta">Aporta material</a>
                 <a href="#acerca">Acerca</a>
             </nav>
 
@@ -53,6 +62,12 @@
                 Biblioteca Digital
             </span>
 
+            <!-- Botón de menú (solo en celular) -->
+            <button class="menu-toggle" type="button" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú">
+                <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+
         </div>
         <div class="textile-band" aria-hidden="true"></div>
     </header>
@@ -60,7 +75,7 @@
     <main>
 
         <!-- ==========================================
-             HERO / BIBLIOTECA
+             PORTADA
         =========================================== -->
         <section class="library-hero" id="inicio">
             <div class="hero-inner">
@@ -69,10 +84,7 @@
                 <div class="hero-copy">
                     <div class="hero-copy-inner">
 
-                        <span class="eyebrow">
-                            <svg class="chakana" viewBox="0 0 30 30" aria-hidden="true"><path fill-rule="evenodd" d="M11 0h8v5h6v6h5v8h-5v6h-6v5h-8v-5H5v-6H0v-8h5V5h6V0Zm4 11.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/></svg>
-                            Repositorio Académico · Juliaca
-                        </span>
+                        <span class="eyebrow">Repositorio Académico</span>
 
                         <h1>
                             Tu biblioteca
@@ -81,13 +93,13 @@
 
                         <p class="hero-description">
                             Sílabos, guías, exámenes autorizados y bibliografía,
-                            organizados en los <strong>diez semestres</strong> del plan de estudios.
-                            Conocimiento compartido desde el Altiplano.
+                            organizados en los <strong>diez semestres</strong> del plan de estudios
+                            de la Escuela Profesional de Economía.
                         </p>
 
                         <p class="hero-resolution">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2Zm2 2v16h10V8h-4V4H8Zm2 8h6v2h-6v-2Zm0 4h6v2h-6v-2Z"/></svg>
-                            Según Resolución de Consejo Universitario N.° 0192-2026-CU-UNAJ
+                            Resolución de Consejo Universitario N.° 0192-2026-CU-UNAJ
                         </p>
 
                         <!-- BUSCADOR -->
@@ -110,7 +122,7 @@
                             </div>
                             <div class="stat">
                                 <strong>1</strong>
-                                <span>solo lugar</span>
+                                <span>repositorio</span>
                             </div>
                         </div>
 
@@ -135,7 +147,7 @@
 
                     <div class="books-instruction">
                         <span class="pulse" aria-hidden="true"></span>
-                        <span>Toca un libro para ver sus cursos</span>
+                        <span>Selecciona un semestre para ver sus cursos</span>
                         <span class="arrow" aria-hidden="true">↓</span>
                     </div>
 
@@ -143,13 +155,8 @@
 
             </div>
 
-            <!-- Silueta del Altiplano: cordillera y cerros de Juliaca -->
-            <svg class="hero-mountains" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-                <path class="far" d="M0 90 L90 60 L170 78 L260 30 L330 64 L420 40 L520 72 L610 22 L690 58 L780 44 L880 76 L980 28 L1060 62 L1150 48 L1250 74 L1340 36 L1440 60 V140 H0 Z"/>
-                <path class="snow" d="M260 30 L244 38 L262 40 L276 36 Z M610 22 L594 32 L612 33 L626 30 Z M980 28 L964 37 L982 38 L996 35 Z M1340 36 L1325 44 L1342 45 L1355 42 Z"/>
-                <path class="mid" d="M0 110 L140 84 L230 100 L340 76 L460 104 L560 90 L700 70 L820 98 L940 86 L1080 104 L1200 82 L1320 100 L1440 88 V140 H0 Z"/>
-                <path class="near" d="M0 126 C200 112 360 132 560 120 C760 108 940 132 1140 118 C1260 110 1360 118 1440 114 V140 H0 Z"/>
-            </svg>
+            <!-- Contorno de los cerros de Juliaca -->
+            <svg class='hero-contour' viewBox='0 0 1440 120' preserveAspectRatio='none' aria-hidden='true'><path d='M0 104 C 160 96 250 58 380 52 C 500 48 580 84 700 96 C 820 106 900 78 1040 74 C 1180 70 1300 94 1440 100' fill='none' stroke='#0B2F6B' stroke-opacity='.18' stroke-width='1.5'/><path d='M0 112 C 240 108 480 100 720 104 C 960 108 1200 100 1440 106' fill='none' stroke='#C9A227' stroke-opacity='.45' stroke-width='1.5'/></svg>
         </section>
 
         <!-- ==========================================
@@ -205,12 +212,64 @@
                 <div id="coursesGrid" class="courses-grid" aria-live="polite">
                     <div class="initial-state">
                         <div class="initial-icon" aria-hidden="true">
-                            <svg viewBox="0 0 30 30"><path fill-rule="evenodd" d="M11 0h8v5h6v6h5v8h-5v6h-6v5h-8v-5H5v-6H0v-8h5V5h6V0Zm4 11.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/></svg>
+                            <svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4V4Zm2 2v11h4c.7 0 1.4.2 2 .5V7a1 1 0 0 0-1-1H6Zm12 0h-5a1 1 0 0 0-1 1v10.5c.6-.3 1.3-.5 2-.5h4V6Z"/></svg>
                         </div>
                         <span>01 — 10</span>
                         <p>Los recursos aparecerán aquí al seleccionar un semestre.</p>
                     </div>
                 </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             APORTA MATERIAL
+        =========================================== -->
+        <section class="contribute-section" id="aporta">
+            <div class="contribute-inner">
+
+                <div class="contribute-copy">
+                    <span class="eyebrow">Aporta material</span>
+                    <h2>Ayuda a que la biblioteca crezca.</h2>
+                    <p>
+                        El repositorio se construye con los aportes de docentes y estudiantes.
+                        El Centro Federado revisa cada material antes de publicarlo, para que
+                        todo lo que encuentres aquí sea confiable y de uso legal.
+                    </p>
+
+                    <ol class="contribute-steps">
+                        <li>
+                            <h3>Prepara el archivo</h3>
+                            <p>De preferencia en PDF, con un nombre claro: curso, tipo de material y periodo. Ej. <em>Microeconomía I – Sílabo – 2026-I</em>.</p>
+                        </li>
+                        <li>
+                            <h3>Envíalo al Centro Federado</h3>
+                            <p>Indica el curso, el semestre y quién es el autor o el docente que autoriza su difusión.</p>
+                        </li>
+                        <li>
+                            <h3>Revisión y publicación</h3>
+                            <p>Verificamos permisos y calidad, lo clasificamos por semestre y curso, y lo publicamos en Drive.</p>
+                        </li>
+                    </ol>
+
+                    <!-- Reemplaza CORREO_DEL_CENTRO_FEDERADO por el correo real -->
+                    <a class="btn-primary" href="mailto:CORREO_DEL_CENTRO_FEDERADO?subject=Aporte%20a%20la%20Biblioteca%20Virtual%20de%20Econom%C3%ADa">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2 2v.5l7 4.5 7-4.5V7H5Zm14 2.9-7 4.5-7-4.5V17h14V9.9Z"/></svg>
+                        Enviar material
+                    </a>
+                </div>
+
+                <aside class="criteria-card">
+                    <h3>Criterios de publicación</h3>
+                    <p>Para proteger la integridad académica y los derechos de autor:</p>
+                    <ul>
+                        <li>Solo libros y textos cuya distribución sea legal.</li>
+                        <li>Exámenes únicamente con autorización del docente.</li>
+                        <li>No se publican evaluaciones vigentes ni material reservado.</li>
+                        <li>Los documentos de estudiantes conservan su autoría.</li>
+                        <li>Los sílabos se identifican por curso, docente y periodo.</li>
+                    </ul>
+                </aside>
 
             </div>
         </section>
@@ -237,9 +296,9 @@
                         mediante Google Drive con el correo institucional.
                     </p>
                     <p>
-                        Sus colores y figuras se inspiran en los tejidos del Altiplano puneño:
-                        la chakana, los rombos y las franjas de colores que acompañan la vida
-                        de Juliaca.
+                        Su diseño conserva el azul y el amarillo de la carrera e incorpora, de forma
+                        discreta, el rombo escalonado del pallay y las fajas de lliclla de la
+                        provincia de San Román.
                     </p>
                 </div>
 
@@ -252,9 +311,9 @@
                         <strong>Formación</strong>
                         <span>Acceso para todos</span>
                     </div>
-                    <div class="color-block red">
-                        <strong>Altiplano</strong>
-                        <span>Identidad juliaqueña</span>
+                    <div class="color-block stripes">
+                        <strong>San Román</strong>
+                        <span>Identidad regional</span>
                     </div>
                 </div>
 
@@ -272,7 +331,7 @@
             <div>
                 <strong>Escuela Profesional de Economía</strong>
                 <span>Repositorio Académico · Universidad Nacional de Juliaca</span>
-                <span class="footer-city">Juliaca, la Ciudad de los Vientos · Puno, Perú</span>
+                <span class="footer-city">Juliaca, provincia de San Román · Puno, Perú</span>
             </div>
             <div class="footer-right">
                 <span>Centro Federado de Economía</span>
@@ -280,6 +339,55 @@
             </div>
         </div>
     </footer>
+
+    <!-- Botón volver arriba -->
+    <button class="to-top" id="toTop" type="button" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.6 4.7 12.9l1.4 1.4L11 9.4V20h2V9.4l4.9 4.9 1.4-1.4L12 5.6Z"/></svg>
+    </button>
+
+    <!-- Menú en celular y botón volver arriba -->
+    <script>
+        (function () {
+            var header = document.querySelector(".site-header");
+            var toggle = document.querySelector(".menu-toggle");
+            var nav = document.getElementById("mainNav");
+
+            function cerrarMenu() {
+                header.classList.remove("nav-open");
+                toggle.setAttribute("aria-expanded", "false");
+                toggle.setAttribute("aria-label", "Abrir menú");
+            }
+
+            toggle.addEventListener("click", function () {
+                var abierto = header.classList.toggle("nav-open");
+                toggle.setAttribute("aria-expanded", abierto ? "true" : "false");
+                toggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+            });
+
+            nav.addEventListener("click", function (e) {
+                if (e.target.closest("a")) cerrarMenu();
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") cerrarMenu();
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!header.contains(e.target)) cerrarMenu();
+            });
+
+            var toTop = document.getElementById("toTop");
+            function revisarScroll() {
+                toTop.classList.toggle("visible", window.scrollY > 600);
+            }
+            window.addEventListener("scroll", revisarScroll, { passive: true });
+            revisarScroll();
+
+            toTop.addEventListener("click", function () {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        })();
+    </script>
 
 </body>
 
