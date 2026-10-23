@@ -28,6 +28,10 @@ La hoja se interpreta con las mismas ocho columnas, en este orden:
 
 Se conservan solo cursos activos con nombre y semestre válido. Los resultados se ordenan por semestre y orden. Las búsquedas ignoran mayúsculas y tildes y cubren todos los semestres. Escribir filtra sin desplazar la página; el botón Buscar lleva a los resultados.
 
+La biblioteca vuelve a consultar Sheets cada 60 segundos mientras está visible y al regresar a la pestaña. Conserva el semestre y la búsqueda; si falla una actualización, mantiene los cursos ya cargados y reintenta. El intervalo se configura con `refreshIntervalMs` en `config.js` (mínimo 30 segundos). La disponibilidad de los cambios también depende de la respuesta de Google Sheets; no es una conexión instantánea.
+
+Si no aparece un curso nuevo, comprueba que está en la pestaña `Secciones`, que B contiene su nombre, C un número entero entre 1 y 10 y G `Sí`. No agregues columnas intermedias ni cambies el orden de A–H. Elige «Todos» para descartar el filtro de semestre. La vista `?demo=1` utiliza ejemplos locales y no consulta Sheets. Después de publicar esta actualización del código, no es necesario volver a subir los archivos de la web cada vez que agregues una fila válida.
+
 No se incluyen materiales ni se cambian permisos de las carpetas. Google Drive controla el acceso real. Una URL vacía o inválida se muestra como «Materiales próximamente», sin un botón engañoso.
 
 ## Canal de aportes pendiente
@@ -56,4 +60,4 @@ Para ejecutar las pruebas del procesamiento de datos y los estados de interacci�
 node --test tests/*.test.cjs
 ```
 
-Se verifican la estructura de la respuesta de Sheets, filtros, tildes, enlaces HTTPS, estados de carga/error, reintentos y navegación. La revisión visual en navegador queda pendiente: el servicio de vista previa del entorno de desarrollo no estaba disponible. El acceso a la hoja en producción depende de su configuración de lectura.
+Se verifican la estructura de la respuesta de Sheets, filtros, tildes, enlaces HTTPS, estados de carga/error, reintentos, navegación y sincronización automática: filas nuevas, conservación de filtros y datos ante fallos, pausa en segundo plano y aislamiento de la vista de ejemplo. La revisión visual en navegador queda pendiente: el servicio de vista previa del entorno de desarrollo no estaba disponible. El acceso a la hoja en producción depende de su configuración de lectura.

@@ -10,8 +10,10 @@
   const grid = $("coursesGrid");
   const search = $("buscador");
   let inputTimer;
-  let cancelRequest = () => {};
+  let refreshTimer;
+  let requestPending = false;
   let requestId = 0;
+  const refreshInterval = Math.max(30000, Number(config.refreshIntervalMs) || 60000);
   search.value = state.query;
   if (state.query || isDemo) state.semester = null;
 
@@ -159,10 +161,20 @@
     search.value = "";
     render();
   }
+  function scheduleRefresh() {
+    clearTimeout(refreshTimer);
+    if (!isDemo && document.visibilityState !== "hidden") {
+      refreshTimer = setTimeout(loadCourses, refreshInterval);
+    }
+  }
   function loadCourses() {
-    cancelRequest();
-    state.status = "loading";
-    render();
+    if (requestPending) return;
+    clearTimeout(refreshTimer);
+    const hadData = state.status === "ready";
+    if (!hadData) {
+      state.status = "loading";
+      render();
+    }
     if (isDemo) {
       $("demoBanner").hidden = false;
       const script = document.createElement("script");
@@ -175,29 +187,47 @@
     const id = ++requestId;
     const callback = `__bibliotecaSheetResponse${id}`;
     const script = document.createElement("script");
+    requestPending = true;
     let finished = false;
-    const cleanup = () => { clearTimeout(timeout); script.remove(); delete window[callback]; };
+    const cleanup = () => {
+      clearTimeout(timeout);
+      script.remove();
+      delete window[callback];
+      requestPending = false;
+    };
     const fail = () => {
       if (finished) return;
       finished = true;
       cleanup();
-      state.status = "error";
-      render();
+      if (!hadData) {
+        state.status = "error";
+        render();
+      } else {
+        $("resultsStatus").textContent = "No pudimos actualizar los cursos. Seguimos mostrando los últimos disponibles y volveremos a intentarlo.";
+      }
+      scheduleRefresh();
     };
     const timeout = setTimeout(fail, 15000);
-    cancelRequest = () => { finished = true; cleanup(); };
     window[callback] = (payload) => {
       if (finished || id !== requestId) return;
-      try { state.courses = parseSheet(payload); state.status = "ready"; }
-      catch { state.status = "error"; }
+      let courses;
+      try { courses = parseSheet(payload); }
+      catch { fail(); return; }
+      const changed = JSON.stringify(courses) !== JSON.stringify(state.courses);
+      state.courses = courses;
+      state.status = "ready";
       finished = true;
       cleanup();
-      render();
+      // Sin cambios, conservamos las tarjetas y el foco del teclado.
+      if (!hadData || changed) render();
+      else $("resultsStatus").textContent = $("coursesDescription").textContent;
+      scheduleRefresh();
     };
     const url = new URL(`https://docs.google.com/spreadsheets/d/${encodeURIComponent(config.sheetId)}/gviz/tq`);
     url.searchParams.set("sheet", config.sheetName);
     url.searchParams.set("headers", "1");
     url.searchParams.set("tqx", `out:json;responseHandler:${callback}`);
+    url.searchParams.set("_", String(Date.now()));
     script.src = url.href;
     script.async = true;
     script.onerror = fail;
@@ -217,6 +247,11 @@
     inputTimer = setTimeout(() => { state.query = search.value; render(); }, 180);
   });
   $("showAll").addEventListener("click", showAll);
+  document.addEventListener("visibilitychange", () => {
+    if (isDemo) return;
+    if (document.visibilityState === "hidden") clearTimeout(refreshTimer);
+    else loadCourses();
+  });
 
   // Navegación móvil sin dependencias ni bloqueo del desplazamiento.
   const menu = $("menuToggle");
