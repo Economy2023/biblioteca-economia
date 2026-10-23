@@ -5,6 +5,8 @@ body{margin:0;color:var(--ink);background:var(--white);font-family:Inter,-apple-
 [hidden]{display:none!important}
 button,input{font:inherit}button,a,input{-webkit-tap-highlight-color:transparent}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}button{cursor:pointer}img{display:block;max-width:100%}h1,h2,h3,p,figure{margin:0}button{color:inherit}h1,h2,h3{line-height:1.12;letter-spacing:-.045em}h1,h2{font-weight:750}h3{font-weight:650}p{color:var(--muted)}
 :focus-visible{outline:3px solid var(--blue);outline-offset:5px}.hero :focus-visible,.works-access :focus-visible,.closing-cta :focus-visible{outline-color:var(--yellow)}
+.skip-link{position:fixed;top:16px;left:16px;z-index:100;display:inline-flex;align-items:center;min-height:48px;padding:12px 22px;border-radius:999px;background:var(--yellow);color:var(--navy);font-size:14px;font-weight:650;box-shadow:0 4px 18px #0b2f6b20;transform:translateY(calc(-100% - 32px))}
+.skip-link:focus{transform:translateY(0)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.svg-definitions{position:absolute;width:0;height:0;overflow:hidden}
 .icon{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .container{width:min(var(--content),calc(100% - 80px));margin-inline:auto}.page-wide{width:min(1376px,calc(100% - 48px));margin-inline:auto}
