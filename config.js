@@ -5,6 +5,6 @@ window.BIBLIOTECA_CONFIG = Object.freeze({
   refreshIntervalMs: 60000,
   trabajosUrl: "https://drive.google.com/drive/folders/1N2iAm3CSY9oup19WfD4n1qXAVUOsESim?usp=sharing",
   // Completa uno de estos canales cuando el Centro Federado lo confirme.
-  aporteEmail: "",
+  aporteEmail: "economosunaj@gmail.com",
   aporteUrl: ""
 });
