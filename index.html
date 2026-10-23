@@ -1,476 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Repositorio Académico de la Escuela Profesional de Economía - Universidad Nacional de Juliaca">
-    <meta name="theme-color" content="#0B2F6B">
-
-    <title>Escuela Profesional de Economía | Repositorio Académico</title>
-
-    <!-- Tipografías -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="styles.css">
-
-    <!-- Google Sheets -->
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="app.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B2F6B">
+  <meta name="description" content="Biblioteca digital de la Escuela Profesional de Economía de la Universidad Nacional de Juliaca. Cursos, materiales académicos y conocimiento compartido.">
+  <title>Biblioteca de Economía · Universidad Nacional de Juliaca</title>
+  <link rel="icon" href="assets/escudo-economia.jpeg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/plaza-juliaca-noche.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
-
 <body>
-
-    <a class="skip-link" href="#cursos">Ir a los cursos</a>
-
-    <!-- ==========================================
-         ENCABEZADO
-    =========================================== -->
-    <header class="site-header">
-
-        <div class="header-top">
-            <div class="header-top-inner">
-                <span><strong>Universidad Nacional de Juliaca</strong><span class="hide-sm"> · Escuela Profesional de Economía</span></span>
-                <span>Juliaca · San Román · Puno</span>
-            </div>
-        </div>
-
-        <div class="header-inner">
-
-            <a href="#inicio" class="brand">
-                <div class="brand-mark">
-                    <img src="assets/images.jpeg" alt="Logo de la Escuela Profesional de Economía">
-                </div>
-                <div class="brand-copy">
-                    <strong>Escuela Profesional de Economía</strong>
-                    <span>Repositorio Académico</span>
-                </div>
-            </a>
-
-            <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
-                <a href="#inicio">Inicio</a>
-                <a href="#como-usar">Cómo usar</a>
-                <a href="#cursos">Cursos</a>
-                <a href="#trabajos">Trabajos</a>
-                <a href="#aporta">Aporta material</a>
-                <a href="#acerca">Acerca</a>
-            </nav>
-
-            <span class="header-badge">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4V4Zm2 2v11h4c.7 0 1.4.2 2 .5V7a1 1 0 0 0-1-1H6Zm12 0h-5a1 1 0 0 0-1 1v10.5c.6-.3 1.3-.5 2-.5h4V6Z"/></svg>
-                Biblioteca Digital
-            </span>
-
-            <!-- Botón de menú (solo en celular) -->
-            <button class="menu-toggle" type="button" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú">
-                <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-                <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-            </button>
-
-        </div>
-        <div class="textile-band" aria-hidden="true"></div>
-    </header>
-
-    <main>
-
-        <!-- ==========================================
-             PORTADA
-        =========================================== -->
-        <section class="library-hero" id="inicio">
-            <div class="hero-inner">
-
-                <!-- PANEL IZQUIERDO -->
-                <div class="hero-copy">
-                    <div class="hero-copy-inner">
-
-                        <span class="eyebrow">Repositorio Académico</span>
-
-                        <h1>
-                            Tu biblioteca
-                            <span>de Economía.</span>
-                        </h1>
-
-                        <p class="hero-description">
-                            Sílabos, guías, exámenes autorizados y bibliografía,
-                            organizados en los <strong>diez semestres</strong> del plan de estudios
-                            de la Escuela Profesional de Economía.
-                        </p>
-
-                        <p class="hero-resolution">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2Zm2 2v16h10V8h-4V4H8Zm2 8h6v2h-6v-2Zm0 4h6v2h-6v-2Z"/></svg>
-                            Resolución de Consejo Universitario N.° 0192-2026-CU-UNAJ
-                        </p>
-
-                        <!-- BUSCADOR -->
-                        <div class="search-box">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M11 4a7 7 0 1 0 4.9 12l4.55 4.55 1.4-1.4-4.55-4.55A7 7 0 0 0 11 4Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"/>
-                            </svg>
-                            <input id="buscador" type="search" placeholder="Buscar un curso… ej. Microeconomía" autocomplete="off" aria-label="Buscar curso">
-                        </div>
-
-                        <!-- INDICADORES -->
-                        <div class="hero-stats">
-                            <div class="stat">
-                                <strong id="totalCursos">—</strong>
-                                <span>cursos</span>
-                            </div>
-                            <div class="stat">
-                                <strong>10</strong>
-                                <span>semestres</span>
-                            </div>
-                            <div class="stat">
-                                <strong>1</strong>
-                                <span>repositorio</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- ESTANTERÍA -->
-                <div class="books-area">
-
-                    <div class="books-area-header">
-                        <span>Plan de estudios</span>
-                        <span class="pill">I — X</span>
-                    </div>
-
-                    <div class="shelf-wrapper">
-                        <div id="semesterBooks" class="bookshelf" aria-label="Semestres">
-                            <!-- Los 10 libros se generan automáticamente con JavaScript -->
-                        </div>
-                        <div class="shelf"></div>
-                        <div class="shelf-shadow"></div>
-                    </div>
-
-                    <div class="books-instruction">
-                        <span class="pulse" aria-hidden="true"></span>
-                        <span>Selecciona un semestre para ver sus cursos</span>
-                        <span class="arrow" aria-hidden="true">↓</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Contorno de los cerros de Juliaca -->
-            <svg class='hero-contour' viewBox='0 0 1440 120' preserveAspectRatio='none' aria-hidden='true'><path d='M0 104 C 160 96 250 58 380 52 C 500 48 580 84 700 96 C 820 106 900 78 1040 74 C 1180 70 1300 94 1440 100' fill='none' stroke='#0B2F6B' stroke-opacity='.18' stroke-width='1.5'/><path d='M0 112 C 240 108 480 100 720 104 C 960 108 1200 100 1440 106' fill='none' stroke='#C9A227' stroke-opacity='.45' stroke-width='1.5'/></svg>
-        </section>
-
-        <!-- ==========================================
-             CÓMO USAR
-        =========================================== -->
-        <section class="steps-section" id="como-usar" aria-label="Cómo usar la biblioteca">
-            <div class="steps-grid">
-
-                <div class="step">
-                    <span class="step-num">1</span>
-                    <div>
-                        <h3>Elige tu semestre</h3>
-                        <p>Selecciona un libro del estante o busca el curso por su nombre.</p>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-num">2</span>
-                    <div>
-                        <h3>Abre el curso</h3>
-                        <p>Revisa los sílabos, guías, exámenes y bibliografía disponibles.</p>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <span class="step-num">3</span>
-                    <div>
-                        <h3>Estudia desde Drive</h3>
-                        <p>Ingresa con tu correo institucional para ver o descargar el material.</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ==========================================
-             PANEL DE CURSOS
-        =========================================== -->
-        <section class="courses-section" id="cursos">
-            <div class="courses-container">
-
-                <div class="courses-heading">
-                    <div>
-                        <span id="coursesEyebrow" class="courses-eyebrow">Biblioteca académica</span>
-                        <h2 id="semesterTitle">Selecciona un semestre</h2>
-                        <p id="semesterDescription">
-                            Elige uno de los libros del estante para visualizar los cursos disponibles.
-                        </p>
-                    </div>
-                    <div id="semesterNumber" class="semester-big-number" aria-hidden="true">—</div>
-                </div>
-
-                <div id="coursesGrid" class="courses-grid" aria-live="polite">
-                    <div class="initial-state">
-                        <div class="initial-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4V4Zm2 2v11h4c.7 0 1.4.2 2 .5V7a1 1 0 0 0-1-1H6Zm12 0h-5a1 1 0 0 0-1 1v10.5c.6-.3 1.3-.5 2-.5h4V6Z"/></svg>
-                        </div>
-                        <span>01 — 10</span>
-                        <p>Los recursos aparecerán aquí al seleccionar un semestre.</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ==========================================
-             TRABAJOS ESTUDIANTILES (ACCESO EXCLUSIVO)
-        =========================================== -->
-        <section class="works-section" id="trabajos">
-            <div class="works-inner">
-
-                <div class="works-head">
-                    <span class="works-badge">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5Zm-3 5a3 3 0 0 1 6 0v3H9V7Zm3 7a2 2 0 0 1 1 3.7V20h-2v-2.3A2 2 0 0 1 12 14Z"/></svg>
-                        Acceso exclusivo para aportantes
-                    </span>
-                    <h2>Banco de trabajos estudiantiles</h2>
-                    <p>
-                        Una colección reservada con los mejores trabajos de estudiantes de distintos
-                        semestres de la carrera. <strong>Solo pueden entrar quienes aportan material</strong>:
-                        compartes un trabajo propio y, a cambio, accedes a los de todos.
-                    </p>
-                </div>
-
-                <!-- Qué contiene -->
-                <div class="works-grid">
-                    <article class="works-card">
-                        <div class="works-card-top">
-                            <span class="works-range">I — III</span>
-                            <span class="works-lock" title="Contenido reservado"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5Zm-3 5a3 3 0 0 1 6 0v3H9V7Zm3 7a2 2 0 0 1 1 3.7V20h-2v-2.3A2 2 0 0 1 12 14Z"/></svg></span>
-                        </div>
-                        <h3>Primeros semestres</h3>
-                        <p>Ensayos, resúmenes, ejercicios resueltos de matemática y estadística, y trabajos de introducción a la economía.</p>
-                    </article>
-
-                    <article class="works-card">
-                        <div class="works-card-top">
-                            <span class="works-range">IV — VI</span>
-                            <span class="works-lock" title="Contenido reservado"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5Zm-3 5a3 3 0 0 1 6 0v3H9V7Zm3 7a2 2 0 0 1 1 3.7V20h-2v-2.3A2 2 0 0 1 12 14Z"/></svg></span>
-                        </div>
-                        <h3>Semestres intermedios</h3>
-                        <p>Informes de micro y macroeconomía, análisis de casos, modelos en Excel y aplicaciones con datos reales.</p>
-                    </article>
-
-                    <article class="works-card">
-                        <div class="works-card-top">
-                            <span class="works-range">VII — X</span>
-                            <span class="works-lock" title="Contenido reservado"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5Zm-3 5a3 3 0 0 1 6 0v3H9V7Zm3 7a2 2 0 0 1 1 3.7V20h-2v-2.3A2 2 0 0 1 12 14Z"/></svg></span>
-                        </div>
-                        <h3>Últimos semestres</h3>
-                        <p>Proyectos de investigación, trabajos de econometría con Stata, R o Python, y avances de tesis.</p>
-                    </article>
-                </div>
-
-                <!-- Cómo obtener acceso -->
-                <div class="works-access">
-                    <div class="works-access-copy">
-                        <h3>¿Cómo obtengo acceso?</h3>
-                        <ol class="works-steps">
-                            <li><strong>Aporta</strong> al menos un trabajo tuyo de cualquier semestre.</li>
-                            <li><strong>Revisión</strong> del Centro Federado: calidad, autoría y permisos.</li>
-                            <li><strong>Acceso</strong> a la carpeta de Drive con tu correo institucional.</li>
-                        </ol>
-                        <p class="works-note">
-                            Cada trabajo conserva el nombre de su autor y se usa solo como referencia de estudio.
-                            Copiarlo o presentarlo como propio es plagio.
-                        </p>
-                    </div>
-
-                    <div class="works-actions">
-                        <a class="btn-gold" href="#aporta">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4Z"/></svg>
-                            Aportar un trabajo
-                        </a>
-                        <!-- Reemplaza URL_CARPETA_DRIVE_TRABAJOS por el enlace de la carpeta restringida -->
-                        <a class="btn-outline-light" href="https://drive.google.com/drive/folders/1N2iAm3CSY9oup19WfD4n1qXAVUOsESim?usp=sharing" target="_blank" rel="noopener noreferrer">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5Zm-3 5a3 3 0 0 1 6 0v3H9V7Zm3 7a2 2 0 0 1 1 3.7V20h-2v-2.3A2 2 0 0 1 12 14Z"/></svg>
-                            Ya aporté: entrar
-                        </a>
-                        <span class="works-hint">Drive te pedirá iniciar sesión con tu correo institucional.</span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ==========================================
-             APORTA MATERIAL
-        =========================================== -->
-        <section class="contribute-section" id="aporta">
-            <div class="contribute-inner">
-
-                <div class="contribute-copy">
-                    <span class="eyebrow">Aporta material</span>
-                    <h2>Ayuda a que la biblioteca crezca.</h2>
-                    <p>
-                        El repositorio se construye con los aportes de docentes y estudiantes.
-                        El Centro Federado revisa cada material antes de publicarlo, para que
-                        todo lo que encuentres aquí sea confiable y de uso legal.
-                    </p>
-
-                    <ol class="contribute-steps">
-                        <li>
-                            <h3>Prepara el archivo</h3>
-                            <p>De preferencia en PDF, con un nombre claro: curso, tipo de material y periodo. Ej. <em>Microeconomía I – Sílabo – 2026-I</em>.</p>
-                        </li>
-                        <li>
-                            <h3>Envíalo al Centro Federado</h3>
-                            <p>Indica el curso, el semestre y quién es el autor o el docente que autoriza su difusión.</p>
-                        </li>
-                        <li>
-                            <h3>Revisión y publicación</h3>
-                            <p>Verificamos permisos y calidad, lo clasificamos por semestre y curso, y lo publicamos en Drive.</p>
-                        </li>
-                    </ol>
-
-                    <!-- Reemplaza CORREO_DEL_CENTRO_FEDERADO por el correo real -->
-                    <a class="btn-primary" href="mailto:CORREO_DEL_CENTRO_FEDERADO?subject=Aporte%20a%20la%20Biblioteca%20Virtual%20de%20Econom%C3%ADa">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2 2v.5l7 4.5 7-4.5V7H5Zm14 2.9-7 4.5-7-4.5V17h14V9.9Z"/></svg>
-                        Enviar material
-                    </a>
-                </div>
-
-                <aside class="criteria-card">
-                    <h3>Criterios de publicación</h3>
-                    <p>Para proteger la integridad académica y los derechos de autor:</p>
-                    <ul>
-                        <li>Solo libros y textos cuya distribución sea legal.</li>
-                        <li>Exámenes únicamente con autorización del docente.</li>
-                        <li>No se publican evaluaciones vigentes ni material reservado.</li>
-                        <li>Los documentos de estudiantes conservan su autoría.</li>
-                        <li>Los sílabos se identifican por curso, docente y periodo.</li>
-                    </ul>
-                </aside>
-
-            </div>
-        </section>
-
-        <!-- ==========================================
-             INFORMACIÓN
-        =========================================== -->
-        <section class="information-section" id="acerca">
-            <div class="information-grid">
-
-                <div class="information-title">
-                    <span>Biblioteca</span>
-                    <h2>Recursos para aprender Economía.</h2>
-                </div>
-
-                <div class="information-text">
-                    <p>
-                        Este repositorio organiza los materiales académicos de la Escuela
-                        Profesional de Economía de acuerdo con su semestre y curso, para que
-                        ningún recurso se pierda entre promociones.
-                    </p>
-                    <p>
-                        Los permisos para materiales restringidos se administran directamente
-                        mediante Google Drive con el correo institucional.
-                    </p>
-                    <p>
-                        Su diseño conserva el azul y el amarillo de la carrera e incorpora, de forma
-                        discreta, el rombo escalonado del pallay y las fajas de lliclla de la
-                        provincia de San Román.
-                    </p>
-                </div>
-
-                <div class="information-colors">
-                    <div class="color-block blue">
-                        <strong>Economía</strong>
-                        <span>Conocimiento ordenado</span>
-                    </div>
-                    <div class="color-block yellow">
-                        <strong>Formación</strong>
-                        <span>Acceso para todos</span>
-                    </div>
-                    <div class="color-block stripes">
-                        <strong>San Román</strong>
-                        <span>Identidad regional</span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ==========================================
-         FOOTER
-    =========================================== -->
-    <footer class="site-footer">
-        <div class="textile-band" aria-hidden="true"></div>
-        <div class="footer-inner">
-            <div>
-                <strong>Escuela Profesional de Economía</strong>
-                <span>Repositorio Académico · Universidad Nacional de Juliaca</span>
-                <span class="footer-city">Juliaca, provincia de San Román · Puno, Perú</span>
-            </div>
-            <div class="footer-right">
-                <span>Centro Federado de Economía</span>
-                <span id="footerYear"></span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Botón volver arriba -->
-    <button class="to-top" id="toTop" type="button" aria-label="Volver arriba">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.6 4.7 12.9l1.4 1.4L11 9.4V20h2V9.4l4.9 4.9 1.4-1.4L12 5.6Z"/></svg>
-    </button>
-
-    <!-- Menú en celular y botón volver arriba -->
-    <script>
-        (function () {
-            var header = document.querySelector(".site-header");
-            var toggle = document.querySelector(".menu-toggle");
-            var nav = document.getElementById("mainNav");
-
-            function cerrarMenu() {
-                header.classList.remove("nav-open");
-                toggle.setAttribute("aria-expanded", "false");
-                toggle.setAttribute("aria-label", "Abrir menú");
-            }
-
-            toggle.addEventListener("click", function () {
-                var abierto = header.classList.toggle("nav-open");
-                toggle.setAttribute("aria-expanded", abierto ? "true" : "false");
-                toggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
-            });
-
-            nav.addEventListener("click", function (e) {
-                if (e.target.closest("a")) cerrarMenu();
-            });
-
-            document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") cerrarMenu();
-            });
-
-            document.addEventListener("click", function (e) {
-                if (!header.contains(e.target)) cerrarMenu();
-            });
-
-            var toTop = document.getElementById("toTop");
-            function revisarScroll() {
-                toTop.classList.toggle("visible", window.scrollY > 600);
-            }
-            window.addEventListener("scroll", revisarScroll, { passive: true });
-            revisarScroll();
-
-            toTop.addEventListener("click", function () {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        })();
-    </script>
-
+  <a class="skip-link" href="#cursos">Ir a los cursos</a>
+  <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6v18h12V7Zm0 0v5h4M9 12h6m-6 4h6"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h3V12H4Zm6 0h3V8h-3Zm6 0h3V3h-3Z"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="m3 17 6-7 5 3 7-9m-6 0h6v6"/></symbol>
+    <symbol id="i-data" viewBox="0 0 24 24"><path d="M4 20h16M4 20V4m3 11 4-5 4 3 5-7"/><circle cx="7" cy="15" r="1"/><circle cx="11" cy="10" r="1"/><circle cx="15" cy="13" r="1"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m3 10 18-7-7 18-4-7Zm7 4L21 3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+  </svg>
+
+  <div id="demoBanner" class="demo-banner" hidden>Vista de diseño · cursos de ejemplo, sin enlaces a materiales reales. <a href="index.html">Abrir biblioteca real</a></div>
+  <header class="site-header" id="inicio">
+    <a class="brand" href="#inicio" aria-label="Escuela Profesional de Economía, inicio">
+      <img src="assets/escudo-economia.jpeg" width="68" height="68" alt="Escudo de la Escuela Profesional de Economía de la UNAJ">
+      <span class="brand-copy"><strong>Escuela Profesional de Economía</strong><span>Universidad Nacional de Juliaca</span></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú"><svg class="icon"><use href="#i-menu"/></svg></button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a href="#inicio" aria-current="page">Inicio</a>
+      <a href="#cursos">Cursos</a>
+      <a href="#trabajos">Trabajos</a>
+      <a href="#aporta">Aporta material</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero page-wide" aria-labelledby="heroTitle">
+      <img class="hero-image" src="assets/plaza-juliaca-noche.png" width="1536" height="1024" alt="Plaza de Juliaca de noche, con su fuente y templo iluminados" fetchpriority="high">
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <span class="eyebrow light">Repositorio académico</span>
+        <h1 id="heroTitle">Tu biblioteca de<br><span>Economía.</span></h1>
+        <p>Sílabos, guías y bibliografía en un solo lugar.</p>
+        <form class="search-form" id="searchForm" role="search">
+          <label for="buscador" class="sr-only">Buscar cursos en todos los semestres</label>
+          <svg class="icon search-icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="buscador" name="q" type="search" placeholder="Buscar un curso…" autocomplete="off" maxlength="150" aria-controls="coursesGrid">
+          <button class="button button-blue" type="submit">Buscar<span class="sr-only"> cursos</span></button>
+        </form>
+      </div>
+      <p class="hero-caption"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>Juliaca · Identidad que nos acompaña</p>
+    </section>
+
+    <section class="courses-section container" id="cursos" aria-labelledby="coursesTitle">
+      <div class="semester-selector">
+        <span class="semester-label" id="semesterLabel">Elige tu semestre</span>
+        <div class="semester-scroll" id="semesterScroll" role="group" aria-labelledby="semesterLabel"><!-- Generado por app.js --></div>
+      </div>
+      <div class="section-heading">
+        <div><span class="eyebrow" id="coursesEyebrow">Biblioteca académica</span><h2 id="coursesTitle">Explora tus cursos</h2><p id="coursesDescription">Elige un semestre y encuentra tus materiales.</p></div>
+        <button class="button button-soft" id="showAll" type="button">Ver todos<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </div>
+      <p class="results-status sr-only" id="resultsStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="courses-grid" id="coursesGrid" aria-busy="true">
+        <div class="state-panel"><span class="loading-dot" aria-hidden="true"></span><h3>Cargando tus cursos</h3><p>Estamos preparando la biblioteca.</p></div>
+      </div>
+      <p class="courses-note"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg>Los materiales se consultan en las carpetas de Google Drive.</p>
+    </section>
+
+    <section class="works-section container" id="trabajos" aria-labelledby="worksTitle">
+      <div class="works-intro">
+        <div class="works-copy"><span class="eyebrow">Banco de trabajos estudiantiles</span><h2 id="worksTitle">Compartir también<br>es <span class="text-blue">aprender.</span></h2><p>Comparte un trabajo propio y solicita acceso al banco después de la revisión del Centro Federado.</p><span class="access-label"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Acceso para aportantes</span></div>
+        <figure class="economy-figure"><div class="economy-image-wrap"><img src="assets/economia-territorio.png" width="482" height="635" loading="lazy" alt="Ilustración de una silueta territorial, una grúa y un contenedor de comercio"></div><figcaption>Economía, conocimiento y comunidad.</figcaption></figure>
+      </div>
+      <div class="works-grid">
+        <article class="work-card"><span class="range-pill">I — III</span><svg class="icon subject-icon" aria-hidden="true"><use href="#i-book"/></svg><h3>Primeros semestres</h3><p>Ensayos, resúmenes y ejercicios de matemática, estadística e introducción a la economía.</p><span class="work-lock"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Acceso para aportantes</span></article>
+        <article class="work-card"><span class="range-pill">IV — VI</span><svg class="icon subject-icon" aria-hidden="true"><use href="#i-chart"/></svg><h3>Semestres intermedios</h3><p>Informes de micro y macroeconomía, análisis de casos y aplicaciones con datos reales.</p><span class="work-lock"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Acceso para aportantes</span></article>
+        <article class="work-card"><span class="range-pill">VII — X</span><svg class="icon subject-icon" aria-hidden="true"><use href="#i-trend"/></svg><h3>Últimos semestres</h3><p>Proyectos de investigación, trabajos de econometría y avances de tesis.</p><span class="work-lock"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Acceso para aportantes</span></article>
+      </div>
+      <div class="works-access"><div><h3>Tu aporte abre nuevas posibilidades.</h3><p>Aporta un trabajo propio. El Centro Federado revisa la autoría y los permisos y gestiona el acceso con tu correo institucional.</p></div><div class="works-actions"><a class="button button-yellow" href="#aporta">Aportar un trabajo<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="button button-outline-light" id="worksDriveLink" target="_blank" rel="noopener noreferrer">Ya aporté: entrar<svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a></div><p class="ethics-note">Cada trabajo conserva su autoría y se utiliza como referencia de estudio.</p></div>
+    </section>
+
+    <section class="culture-section container" id="identidad" aria-labelledby="cultureTitle">
+      <div class="culture-art"><img src="assets/historia-juliaca.png" width="1024" height="1536" loading="lazy" alt="Ilustración cultural de Juliaca con un músico tradicional, arquitectura histórica y un tren a vapor"></div>
+      <div class="culture-copy"><span class="eyebrow">Historia e identidad</span><h2 id="cultureTitle">Miramos al futuro.<br><span class="text-blue">Llevamos nuestras raíces.</span></h2><p>La música, la arquitectura y el ferrocarril forman parte de la memoria que nos acompaña. Aprendemos desde nuestra identidad para comprender y transformar nuestro entorno.</p><span class="locality"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>Juliaca · San Román · Puno</span><a class="button button-blue" href="#acerca">Nuestra biblioteca<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </section>
+
+    <section class="contribute-section container" id="aporta" aria-labelledby="contributeTitle">
+      <div class="center-heading"><span class="eyebrow">Conocimiento compartido</span><h2 id="contributeTitle">Ayuda a que la biblioteca <span class="text-blue">crezca.</span></h2><p>Comparte material académico con el Centro Federado.</p></div>
+      <div class="contribute-layout"><div class="contribute-main"><ol class="contribute-steps" id="guia-aporte"><li><span class="step-number">01</span><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg><h3>Prepara el archivo</h3><p>De preferencia en PDF, con curso, tipo de material y periodo.</p></li><li><span class="step-number">02</span><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg><h3>Envíalo al Centro Federado</h3><p>Indica el curso, el semestre y quién es el autor o autoriza la difusión.</p></li><li><span class="step-number">03</span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><h3>Revisión y publicación</h3><p>Se verifican los permisos y la calidad antes de publicarlo en Drive.</p></li></ol><a class="button button-blue" id="contributeLink" href="#guia-aporte">Cómo aportar material<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a><p class="contact-note" id="contributeNote">Coordina el envío con el Centro Federado de Economía.</p></div><aside class="criteria-card"><h3>Antes de compartir</h3><p>Para cuidar la calidad y la integridad académica.</p><ul><li>Material con distribución autorizada.</li><li>Exámenes con permiso del docente.</li><li>Sin evaluaciones vigentes ni material reservado.</li><li>Autoría y fuentes identificadas.</li></ul></aside></div>
+    </section>
+
+    <section class="about-section container" id="acerca" aria-labelledby="aboutTitle">
+      <div class="about-photo"><img src="assets/plaza-juliaca-dia.jpg" width="2048" height="1154" loading="lazy" alt="Plaza de Juliaca de día, con la fuente, el templo y los jardines"></div>
+      <div class="about-copy"><span class="eyebrow">Nuestra biblioteca</span><h2 id="aboutTitle">Conocimiento<br>con identidad.<br><span class="text-blue">Desde Juliaca.</span></h2><p>Organizamos los recursos de Economía para que el conocimiento siga creciendo entre estudiantes y generaciones.</p><div class="about-points"><div><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><h3>Por semestre y curso</h3><p>Encuentra los materiales de tu formación en un solo lugar.</p></div><div><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg><h3>Materiales en Drive</h3><p>Consulta las carpetas y sus permisos de acceso.</p></div></div></div>
+    </section>
+    <section class="closing-cta container" aria-label="Continúa explorando"><div><h2>Aprender. Compartir.<br>Seguir creciendo.</h2><p>Una biblioteca construida por y para la comunidad de Economía.</p></div><a class="button button-yellow" href="#cursos">Explorar cursos<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></section>
+  </main>
+
+  <footer class="site-footer container"><div class="footer-brand"><img src="assets/escudo-economia.jpeg" width="54" height="54" alt=""><div><strong>Escuela Profesional de Economía</strong><span>Universidad Nacional de Juliaca</span><span>Centro Federado de Economía</span></div></div><nav aria-label="Enlaces del pie de página"><a href="#cursos">Cursos</a><a href="#trabajos">Trabajos</a><a href="#aporta">Aporta material</a></nav><div class="footer-bottom"><span>Juliaca · San Román · Puno</span><span id="footerYear"></span></div></footer>
+  <a class="to-top" href="#inicio" aria-label="Volver al inicio" hidden>↑</a>
 </body>
-
 </html>

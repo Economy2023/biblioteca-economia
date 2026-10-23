@@ -1,1088 +1,265 @@
-/* ======================================================
-   CONFIGURACIÓN
-====================================================== */
-
-const SHEET_ID = "12NOm3qbdM7X0eA6NPCafV35p6rhENyCcanIs47ndLuw";
-
-const SHEET_NAME = "Secciones";
-
-
-/* ======================================================
-   DATOS
-====================================================== */
-
-let cursos = [];
-
-let semestreActivo = null;
-
-
-/* ======================================================
-   ELEMENTOS
-====================================================== */
-
-const semesterBooks =
-    document.getElementById(
-        "semesterBooks"
-    );
-
-
-const coursesGrid =
-    document.getElementById(
-        "coursesGrid"
-    );
-
-
-const semesterTitle =
-    document.getElementById(
-        "semesterTitle"
-    );
-
-
-const semesterDescription =
-    document.getElementById(
-        "semesterDescription"
-    );
-
-
-const semesterNumber =
-    document.getElementById(
-        "semesterNumber"
-    );
-
-
-const coursesEyebrow =
-    document.getElementById(
-        "coursesEyebrow"
-    );
-
-
-const buscador =
-    document.getElementById(
-        "buscador"
-    );
-
-
-const totalCursos =
-    document.getElementById(
-        "totalCursos"
-    );
-
-
-/* ======================================================
-   FOOTER
-====================================================== */
-
-document.getElementById(
-    "footerYear"
-).textContent =
-    `© ${new Date().getFullYear()}`;
-
-
-/* ======================================================
-   ROMANOS
-====================================================== */
-
-const ROMANOS = {
-
-    1: "I",
-    2: "II",
-    3: "III",
-    4: "IV",
-    5: "V",
-    6: "VI",
-    7: "VII",
-    8: "VIII",
-    9: "IX",
-    10: "X"
-
-};
-
-
-/* ======================================================
-   ALTURA DE LOS LIBROS
-====================================================== */
-
-const ALTURAS = {
-
-    1: 88,
-    2: 94,
-    3: 83,
-    4: 91,
-    5: 97,
-    6: 86,
-    7: 93,
-    8: 81,
-    9: 96,
-    10: 89
-
-};
-
-
-/* ======================================================
-   GOOGLE SHEETS
-====================================================== */
-
-google.charts.load(
-    "current"
-);
-
-
-google.charts.setOnLoadCallback(
-    cargarCursos
-);
-
-
-
-function cargarCursos() {
-
-    const url =
-
-        `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`
-
-        +
-
-        `?sheet=${encodeURIComponent(SHEET_NAME)}`
-
-        +
-
-        `&headers=1`;
-
-
-    const query =
-        new google.visualization.Query(
-            url
-        );
-
-
-    query.send(
-        procesarRespuesta
-    );
-
-}
-
-
-
-/* ======================================================
-   PROCESAR RESPUESTA
-====================================================== */
-
-function procesarRespuesta(
-    response
-) {
-
-    if (
-        response.isError()
-    ) {
-
-        console.error(
-            response.getMessage()
-        );
-
-
-        mostrarError();
-
-        return;
-
+(() => {
+  "use strict";
+  const config = window.BIBLIOTECA_CONFIG;
+  const { normalize, safeUrl, parseSheet, filterCourses } = window.BibliotecaData;
+  const $ = (id) => document.getElementById(id);
+  const roman = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+  const params = new URLSearchParams(location.search);
+  const isDemo = params.get("demo") === "1";
+  const state = { courses: [], semester: 1, query: params.get("q") || "", status: "loading" };
+  const grid = $("coursesGrid");
+  const search = $("buscador");
+  let inputTimer;
+  let cancelRequest = () => {};
+  let requestId = 0;
+  search.value = state.query;
+  if (state.query || isDemo) state.semester = null;
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+  function icon(name, className = "icon") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", className);
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", `#i-${name}`);
+    svg.append(use);
+    return svg;
+  }
+  function scrollToCourses() {
+    $("cursos").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+  }
+  function makeSemesterButtons() {
+    const fragment = document.createDocumentFragment();
+    for (const semester of [null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+      const label = semester === null ? "Todos" : roman[semester];
+      const button = element("button", `semester-tab${semester === null ? " is-all" : ""}`, label);
+      button.type = "button";
+      button.dataset.semester = semester === null ? "all" : semester;
+      button.setAttribute("aria-label", semester === null ? "Ver todos los semestres" : `Semestre ${roman[semester]}`);
+      button.setAttribute("aria-pressed", String(state.semester === semester));
+      button.setAttribute("aria-controls", "coursesGrid");
+      button.addEventListener("click", () => {
+        clearTimeout(inputTimer);
+        state.semester = semester;
+        state.query = "";
+        search.value = "";
+        render();
+      });
+      fragment.append(button);
     }
-
-
-    const data =
-        response.getDataTable();
-
-
-    cursos = [];
-
-
-    for (
-        let fila = 0;
-        fila < data.getNumberOfRows();
-        fila++
-    ) {
-
-        const curso = {
-
-            id:
-                obtenerValor(
-                    data,
-                    fila,
-                    0
-                ),
-
-            nombre:
-                obtenerValor(
-                    data,
-                    fila,
-                    1
-                ),
-
-            ciclo:
-                Number(
-                    obtenerValor(
-                        data,
-                        fila,
-                        2
-                    )
-                ),
-
-            descripcion:
-                obtenerValor(
-                    data,
-                    fila,
-                    3
-                ),
-
-            tipoAcceso:
-                obtenerValor(
-                    data,
-                    fila,
-                    4
-                ),
-
-            driveUrl:
-                obtenerValor(
-                    data,
-                    fila,
-                    5
-                ),
-
-            activo:
-                obtenerValor(
-                    data,
-                    fila,
-                    6
-                ),
-
-            orden:
-                Number(
-                    obtenerValor(
-                        data,
-                        fila,
-                        7
-                    )
-                ) || 0
-
-        };
-
-
-        if (
-
-            normalizar(
-                curso.activo
-            )
-
-            ===
-
-            "si"
-
-        ) {
-
-            cursos.push(
-                curso
-            );
-
-        }
-
+    $("semesterScroll").replaceChildren(fragment);
+  }
+  function updateSelection() {
+    document.querySelectorAll(".semester-tab").forEach((button) => {
+      const semester = button.dataset.semester === "all" ? null : Number(button.dataset.semester);
+      button.setAttribute("aria-pressed", String(!state.query && semester === state.semester));
+    });
+  }
+  function courseIcon(name) {
+    const n = normalize(name);
+    if (/econometr|estadistic|dato/.test(n)) return "data";
+    if (/macro|crecimiento|finanza/.test(n)) return "trend";
+    if (/micro|econom/.test(n)) return "chart";
+    return "book";
+  }
+  function courseCard(course, index, count) {
+    const featured = index % 5 === 0;
+    const card = element("article", `course-card${featured ? " featured" : ""}`);
+    const titleId = `course-title-${index}`;
+    card.setAttribute("aria-labelledby", titleId);
+    card.append(icon(courseIcon(course.nombre), "icon course-icon"));
+    card.append(element("span", "course-semester", `Semestre ${roman[course.ciclo]}`));
+    const title = element("h3", "", course.nombre);
+    title.id = titleId;
+    card.append(title, element("p", "course-description", course.descripcion || "Consulta los materiales académicos disponibles para este curso."));
+    if (featured && count >= 5) {
+      const resources = element("div", "resource-labels");
+      // Descriptores del repositorio; no inventan enlaces ni cantidades por tipo.
+      ["Sílabos", "Guías", "Bibliografía"].forEach((label) => {
+        const item = element("span", "", label);
+        item.prepend(icon(label === "Bibliografía" ? "book" : "file"));
+        resources.append(item);
+      });
+      card.append(resources);
     }
-
-
-    ordenarCursos();
-
-
-    totalCursos.textContent =
-        cursos.length;
-
-
-    crearEstanteria();
-
-}
-
-
-
-/* ======================================================
-   OBTENER CELDA
-====================================================== */
-
-function obtenerValor(
-    data,
-    fila,
-    columna
-) {
-
-    const valor =
-        data.getValue(
-            fila,
-            columna
-        );
-
-
-    return valor ?? "";
-
-}
-
-
-
-/* ======================================================
-   ORDENAR
-====================================================== */
-
-function ordenarCursos() {
-
-    cursos.sort(
-
-        (a, b) => {
-
-            if (
-                a.ciclo !== b.ciclo
-            ) {
-
-                return (
-                    a.ciclo
-                    -
-                    b.ciclo
-                );
-
-            }
-
-
-            return (
-                a.orden
-                -
-                b.orden
-            );
-
-        }
-
-    );
-
-}
-
-
-
-/* ======================================================
-   CREAR LOS 10 LIBROS
-====================================================== */
-
-function crearEstanteria() {
-
-    semesterBooks.innerHTML =
-        "";
-
-
-    for (
-        let semestre = 1;
-        semestre <= 10;
-        semestre++
-    ) {
-
-        const cantidad =
-            cursos.filter(
-
-                curso =>
-                    curso.ciclo === semestre
-
-            ).length;
-
-
-        const libro =
-            document.createElement(
-                "button"
-            );
-
-
-        libro.type =
-            "button";
-
-
-        libro.className =
-            "semester-book";
-
-
-        libro.dataset.semestre =
-            semestre;
-
-
-        libro.style.setProperty(
-
-            "--book-height",
-
-            `${ALTURAS[semestre]}%`
-
-        );
-
-
-        libro.setAttribute(
-
-            "aria-label",
-
-            `${ROMANOS[semestre]} semestre, ${cantidad} cursos`
-
-        );
-
-
-        libro.innerHTML = `
-
-            <span class="book-title">
-
-                ${ROMANOS[semestre]} SEMESTRE
-
-            </span>
-
-
-            <span class="book-count">
-
-                ${cantidad}
-
-            </span>
-
-        `;
-
-
-        libro.addEventListener(
-
-            "click",
-
-            () => {
-
-                seleccionarSemestre(
-                    semestre
-                );
-
-            }
-
-        );
-
-
-        semesterBooks.appendChild(
-            libro
-        );
-
+    const bottom = element("div", "course-bottom");
+    const restricted = normalize(course.tipoAcceso) === "restringido";
+    const access = element("span", "course-access", restricted ? "Acceso restringido" : "Acceso público");
+    if (restricted) access.prepend(icon("lock"));
+    bottom.append(access);
+    const url = safeUrl(course.driveUrl);
+    if (url && !isDemo) {
+      const link = element("a", "course-link");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", `Abrir ${course.nombre} en Google Drive, nueva pestaña`);
+      link.append(element("span", "course-link-label", "Abrir en Drive"), icon("external"));
+      bottom.append(link);
+    } else {
+      bottom.append(element("span", "course-unavailable", isDemo ? "Curso de ejemplo" : "Materiales próximamente"));
     }
-
-}
-
-
-
-/* ======================================================
-   SELECCIONAR SEMESTRE
-====================================================== */
-
-function seleccionarSemestre(
-    semestre
-) {
-
-    semestreActivo =
-        semestre;
-
-
-    buscador.value =
-        "";
-
-
-    document
-        .querySelectorAll(
-            ".semester-book"
-        )
-        .forEach(
-
-            libro => {
-
-                libro.classList.remove(
-                    "active"
-                );
-
-            }
-
-        );
-
-
-    const seleccionado =
-        document.querySelector(
-
-            `.semester-book[data-semestre="${semestre}"]`
-
-        );
-
-
-    if (
-        seleccionado
-    ) {
-
-        seleccionado.classList.add(
-            "active"
-        );
-
-    }
-
-
-    const cursosSemestre =
-        cursos.filter(
-
-            curso =>
-                curso.ciclo === semestre
-
-        );
-
-
-    semesterTitle.textContent =
-        `${ROMANOS[semestre]} semestre`;
-
-
-    semesterNumber.textContent =
-        ROMANOS[semestre];
-
-
-    coursesEyebrow.textContent =
-        "Plan de estudios";
-
-
-    semesterDescription.textContent =
-
-        `${cursosSemestre.length} ${
-
-            cursosSemestre.length === 1
-                ?
-                "curso disponible"
-                :
-                "cursos disponibles"
-
-        } en este semestre.`;
-
-
-    mostrarCursos(
-        cursosSemestre
-    );
-
-
-    document
-        .getElementById(
-            "cursos"
-        )
-        .scrollIntoView({
-
-            behavior:
-                "smooth",
-
-            block:
-                "start"
-
-        });
-
-}
-
-
-
-/* ======================================================
-   MOSTRAR CURSOS
-====================================================== */
-
-function mostrarCursos(
-    lista
-) {
-
-    coursesGrid.innerHTML =
-        "";
-
-
-    if (
-        lista.length === 0
-    ) {
-
-        coursesGrid.innerHTML = `
-
-            <div class="empty-state">
-
-                <strong>
-                    Sin cursos registrados
-                </strong>
-
-                <p>
-                    Todavía no hay recursos
-                    registrados para este semestre.
-                </p>
-
-            </div>
-
-        `;
-
-
-        return;
-
-    }
-
-
-    lista.forEach(
-
-        (
-            curso,
-            index
-        ) => {
-
-            const card =
-                crearCurso(
-                    curso,
-                    index
-                );
-
-
-            coursesGrid.appendChild(
-                card
-            );
-
-        }
-
-    );
-
-}
-
-
-
-/* ======================================================
-   CREAR CURSO
-====================================================== */
-
-function crearCurso(
-    curso,
-    index
-) {
-
-    const card =
-        document.createElement(
-            "article"
-        );
-
-
-    card.className =
-        "course-card";
-
-
-    const restringido =
-
-        normalizar(
-            curso.tipoAcceso
-        )
-
-        ===
-
-        "restringido";
-
-
-    const url =
-        validarURL(
-            curso.driveUrl
-        );
-
-
-    const numero =
-        String(
-            index + 1
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    card.innerHTML = `
-
-        <span class="course-number">
-
-            ${numero}
-
-        </span>
-
-
-        <h3>
-
-            ${escaparHTML(
-                curso.nombre
-            )}
-
-        </h3>
-
-
-        <p>
-
-            ${
-
-                escaparHTML(
-                    curso.descripcion
-                )
-
-                ||
-
-                "Material académico disponible para este curso."
-
-            }
-
-        </p>
-
-
-        <div class="course-meta">
-
-
-            <span class="access">
-
-                ${
-
-                    restringido
-                        ?
-                        "Acceso restringido"
-                        :
-                        "Acceso público"
-
-                }
-
-            </span>
-
-
-            <a
-
-                class="course-link"
-
-                href="${url}"
-
-                target="_blank"
-
-                rel="noopener noreferrer"
-
-                aria-label="Abrir ${escaparHTML(curso.nombre)}"
-
-            >
-
-                ↗
-
-            </a>
-
-
-        </div>
-
-    `;
-
-
+    card.append(bottom);
     return card;
-
-}
-
-
-
-/* ======================================================
-   BUSCADOR
-====================================================== */
-
-buscador.addEventListener(
-
-    "input",
-
-    () => {
-
-        const texto =
-            normalizar(
-                buscador.value
-            );
-
-
-        if (
-            !texto
-        ) {
-
-            if (
-                semestreActivo
-            ) {
-
-                seleccionarSemestre(
-                    semestreActivo
-                );
-
-            }
-
-            else {
-
-                estadoInicial();
-
-            }
-
-
-            return;
-
-        }
-
-
-        document
-            .querySelectorAll(
-                ".semester-book"
-            )
-            .forEach(
-
-                libro =>
-                    libro.classList.remove(
-                        "active"
-                    )
-
-            );
-
-
-        const resultados =
-            cursos.filter(
-
-                curso => {
-
-                    const nombre =
-                        normalizar(
-                            curso.nombre
-                        );
-
-
-                    const descripcion =
-                        normalizar(
-                            curso.descripcion
-                        );
-
-
-                    return (
-
-                        nombre.includes(
-                            texto
-                        )
-
-                        ||
-
-                        descripcion.includes(
-                            texto
-                        )
-
-                    );
-
-                }
-
-            );
-
-
-        coursesEyebrow.textContent =
-            "Resultados";
-
-
-        semesterTitle.textContent =
-            "Búsqueda";
-
-
-        semesterNumber.textContent =
-            resultados.length;
-
-
-        semesterDescription.textContent =
-
-            resultados.length === 1
-
-            ?
-
-            "1 curso encontrado."
-
-            :
-
-            `${resultados.length} cursos encontrados.`;
-
-
-
-        mostrarCursos(
-            resultados
-        );
-
-
-
-        document
-            .getElementById(
-                "cursos"
-            )
-            .scrollIntoView({
-
-                behavior:
-                    "smooth",
-
-                block:
-                    "start"
-
-            });
-
+  }
+  function renderState(title, description, action) {
+    grid.className = "courses-grid";
+    delete grid.dataset.count;
+    const panel = element("div", "state-panel");
+    panel.append(state.status === "loading" ? element("span", "loading-dot") : icon(state.status === "error" ? "book" : "search", "icon empty-icon"));
+    panel.append(element("h3", "", title), element("p", "", description));
+    if (action) {
+      const button = element("button", "button button-blue", action.label);
+      button.type = "button";
+      button.addEventListener("click", action.run);
+      panel.append(button);
     }
-
-);
-
-
-
-/* ======================================================
-   ESTADO INICIAL
-====================================================== */
-
-function estadoInicial() {
-
-    coursesEyebrow.textContent =
-        "Biblioteca académica";
-
-
-    semesterTitle.textContent =
-        "Selecciona un semestre";
-
-
-    semesterNumber.textContent =
-        "—";
-
-
-    semesterDescription.textContent =
-        "Elige uno de los libros del estante para visualizar los cursos disponibles.";
-
-
-    coursesGrid.innerHTML = `
-
-        <div class="initial-state">
-
-            <span>
-                01 — 10
-            </span>
-
-            <p>
-                Los recursos aparecerán aquí
-                al seleccionar un semestre.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-
-/* ======================================================
-   NORMALIZAR
-====================================================== */
-
-function normalizar(
-    valor
-) {
-
-    return String(
-        valor || ""
-    )
-
-        .trim()
-
-        .toLowerCase()
-
-        .normalize(
-            "NFD"
-        )
-
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        );
-
-}
-
-
-
-/* ======================================================
-   ESCAPAR HTML
-====================================================== */
-
-function escaparHTML(
-    texto
-) {
-
-    return String(
-        texto || ""
-    )
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-
-/* ======================================================
-   VALIDAR URL
-====================================================== */
-
-function validarURL(
-    valor
-) {
-
-    try {
-
-        const url =
-            new URL(
-                String(valor)
-            );
-
-
-        if (
-            url.protocol === "https:"
-        ) {
-
-            return url.href;
-
-        }
-
+    grid.replaceChildren(panel);
+    $("resultsStatus").textContent = `${title}. ${description}`;
+  }
+  function render() {
+    updateSelection();
+    grid.setAttribute("aria-busy", String(state.status === "loading"));
+    if (state.status === "loading") {
+      renderState("Cargando tus cursos", "Estamos preparando la biblioteca.");
+      return;
     }
-
-    catch {
-
-        console.warn(
-            "URL incorrecta:",
-            valor
-        );
-
+    if (state.status === "error") {
+      renderState("No pudimos cargar los cursos", "Comprueba tu conexión e inténtalo otra vez. Puedes seguir explorando las demás secciones de la biblioteca.", { label: "Volver a intentar", run: loadCourses });
+      return;
     }
+    const results = filterCourses(state.courses, state.semester, state.query);
+    const searching = Boolean(normalize(state.query));
+    $("coursesEyebrow").textContent = searching ? "Búsqueda en todos los semestres" : state.semester === null ? "Biblioteca académica" : `Plan de estudios · ${roman[state.semester]} semestre`;
+    $("coursesTitle").textContent = searching ? "Resultados de tu búsqueda" : "Explora tus cursos";
+    const context = searching ? `para «${state.query.trim()}»` : state.semester === null ? "en la biblioteca" : `en el ${roman[state.semester]} semestre`;
+    const description = `${results.length} ${results.length === 1 ? "curso disponible" : "cursos disponibles"} ${context}.`;
+    $("coursesDescription").textContent = description;
+    $("resultsStatus").textContent = description;
+    if (!results.length) {
+      if (searching) renderState("No encontramos ese curso", "Prueba con otro nombre o una palabra más corta.", { label: "Ver todos los cursos", run: showAll });
+      else renderState("Este semestre está por crecer", "Todavía no hay cursos publicados para esta selección. Puedes consultar los demás semestres.", { label: "Ver todos los cursos", run: showAll });
+      return;
+    }
+    grid.className = `courses-grid${results.length < 5 ? " is-compact" : ""}`;
+    grid.dataset.count = results.length;
+    const fragment = document.createDocumentFragment();
+    results.forEach((course, index) => fragment.append(courseCard(course, index, results.length)));
+    grid.replaceChildren(fragment);
+  }
+  function showAll() {
+    clearTimeout(inputTimer);
+    state.semester = null;
+    state.query = "";
+    search.value = "";
+    render();
+  }
+  function loadCourses() {
+    cancelRequest();
+    state.status = "loading";
+    render();
+    if (isDemo) {
+      $("demoBanner").hidden = false;
+      const script = document.createElement("script");
+      script.src = "demo-data.js";
+      script.onload = () => { state.courses = window.BIBLIOTECA_DEMO; state.status = "ready"; render(); script.remove(); };
+      script.onerror = () => { state.status = "error"; render(); script.remove(); };
+      document.head.append(script);
+      return;
+    }
+    const id = ++requestId;
+    const callback = `__bibliotecaSheetResponse${id}`;
+    const script = document.createElement("script");
+    let finished = false;
+    const cleanup = () => { clearTimeout(timeout); script.remove(); delete window[callback]; };
+    const fail = () => {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      state.status = "error";
+      render();
+    };
+    const timeout = setTimeout(fail, 15000);
+    cancelRequest = () => { finished = true; cleanup(); };
+    window[callback] = (payload) => {
+      if (finished || id !== requestId) return;
+      try { state.courses = parseSheet(payload); state.status = "ready"; }
+      catch { state.status = "error"; }
+      finished = true;
+      cleanup();
+      render();
+    };
+    const url = new URL(`https://docs.google.com/spreadsheets/d/${encodeURIComponent(config.sheetId)}/gviz/tq`);
+    url.searchParams.set("sheet", config.sheetName);
+    url.searchParams.set("headers", "1");
+    url.searchParams.set("tqx", `out:json;responseHandler:${callback}`);
+    script.src = url.href;
+    script.async = true;
+    script.onerror = fail;
+    script.onload = () => { if (!finished) fail(); };
+    document.head.append(script);
+  }
 
+  $("searchForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    clearTimeout(inputTimer);
+    state.query = search.value;
+    render();
+    scrollToCourses();
+  });
+  search.addEventListener("input", () => {
+    clearTimeout(inputTimer);
+    inputTimer = setTimeout(() => { state.query = search.value; render(); }, 180);
+  });
+  $("showAll").addEventListener("click", showAll);
 
-    return "#";
+  // Navegación móvil sin dependencias ni bloqueo del desplazamiento.
+  const menu = $("menuToggle");
+  const nav = $("mainNav");
+  function setMenu(open) {
+    menu.setAttribute("aria-expanded", String(open));
+    menu.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+    menu.querySelector("use").setAttribute("href", open ? "#i-close" : "#i-menu");
+    nav.classList.toggle("is-open", open);
+  }
+  menu.addEventListener("click", () => setMenu(menu.getAttribute("aria-expanded") !== "true"));
+  nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && menu.getAttribute("aria-expanded") === "true") { setMenu(false); menu.focus(); } });
 
-}
-
-
-
-/* ======================================================
-   ERROR
-====================================================== */
-
-function mostrarError() {
-
-    coursesGrid.innerHTML = `
-
-        <div class="empty-state">
-
-            <strong>
-                No se pudo cargar el repositorio
-            </strong>
-
-            <p>
-                Revisa la conexión con Google Sheets.
-            </p>
-
-        </div>
-
-    `;
-
-}
+  const worksUrl = safeUrl(config.trabajosUrl);
+  if (worksUrl) $("worksDriveLink").href = worksUrl;
+  else $("worksDriveLink").hidden = true;
+  const contributionUrl = safeUrl(config.aporteUrl);
+  const email = String(config.aporteEmail || "").trim();
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !/[\r\n]/.test(email);
+  if (contributionUrl || emailValid) {
+    const link = $("contributeLink");
+    link.href = contributionUrl || `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent("Aporte a la Biblioteca de Economía")}`;
+    link.firstChild.textContent = "Enviar material";
+    if (contributionUrl) { link.target = "_blank"; link.rel = "noopener noreferrer"; }
+    $("contributeNote").textContent = "El Centro Federado revisa cada aporte antes de publicarlo.";
+  }
+  $("footerYear").textContent = `© ${new Date().getFullYear()}`;
+  const toTop = document.querySelector(".to-top");
+  let scrollPending = false;
+  function updateScroll() {
+    toTop.hidden = window.scrollY < 650;
+    let current = "#inicio";
+    ["cursos", "trabajos", "aporta"].forEach((id) => {
+      if ($(id).getBoundingClientRect().top <= 150) current = `#${id}`;
+    });
+    nav.querySelectorAll("a").forEach((link) => {
+      if (link.getAttribute("href") === current) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+    scrollPending = false;
+  }
+  window.addEventListener("scroll", () => { if (!scrollPending) { scrollPending = true; requestAnimationFrame(updateScroll); } }, { passive: true });
+  makeSemesterButtons();
+  loadCourses();
+})();
